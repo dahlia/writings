@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="<%= content.language %>" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title><%= site.title %></title>
+    <link rel="stylesheet" href="<%= baseUrl %>/static/style.css">
+  </head>
+  <body>
+    <h1><%= site.title %></h1>
+    <nav class="articles">
+      <% let year = null %>
+      <% const posts = [...list].reverse() %>
+      <% for await (const post of posts) { %>
+        <% const published = await queryPublished(post) %>
+        <% const pubYear = published.getFullYear() %>
+        <% if (year !== pubYear) { %>
+          <% if (year != null) { %>
+            </ul>
+          <% } %>
+          <h2><time
+            datetime="<%= pubYear %>"><%= formatYear(pubYear) %></time></h2>
+          <ul>
+          <% year = pubYear %>
+        <% } %>
+        <li>
+          <time datetime="<%= published.toISOString() %>">
+            <%= formatMonthDate(published) %>
+          </time>
+          <% const postMetadata = await post.get(content.key).getMetadata() %>
+          <a href="<%= postMetadata?.multiViews?.get(null) ?? post.path %>">
+            <%= await queryTitle(post) %>
+          </a>
+        </li>
+      <% } %>
+      <% if (year != null) { %>
+        </ul>
+      <% } %>
+    </nav>
+  </body>
+</html>

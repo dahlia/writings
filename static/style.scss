@@ -1,0 +1,256 @@
+@import url(https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@100;300;700;900&display=swap);
+
+@mixin vertical {
+  :root:lang(ko-Kore):not(.horizontal) &,
+  :root:lang(ja):not(.horizontal) &,
+  :root:lang(zh):not(.horizontal) &,
+  :root.vertical & {
+    @content;
+  }
+}
+
+@mixin horizontal {
+  :root:lang(ko-Kore).horizontal &,
+  :root:lang(ko-Hang) &,
+  :root:lang(ja).horizontal &,
+  :root:lang(zh).horizontal &,
+  :root.horizontal & {
+    @content;
+  }
+}
+
+body {
+  @include vertical {
+    writing-mode: vertical-rl;
+  }
+}
+
+::selection, ::-moz-selection {
+  background: #171717;
+  color: #ddd;
+  font-weight: 100;
+
+  @media (prefers-color-scheme: dark) {
+    background: #ddd;
+    color: #111;
+    font-weight: 200;
+  }
+}
+
+body {
+  padding: 1em;
+  margin: auto;
+
+  @include vertical {
+    max-height: 45rem;
+  }
+
+  @include horizontal {
+    max-width: 45rem;
+  }
+
+  font-family: 'Noto Serif CJK KR', 'Noto Serif KR', serif;
+  font-size: larger;
+  line-height: 1.6;
+
+  @media (prefers-color-scheme: dark) {
+    background: #171717;
+    color: #ddd;
+    font-weight: 100;
+  }
+
+  > h1 {
+    margin-right: 0;
+    font-weight: 900;
+
+    @media (prefers-color-scheme: dark) {
+      font-weight: 700;
+    }
+  }
+}
+
+@media (min-height: 60rem) {
+  footer > nav {
+    @include vertical {
+      position: absolute;
+      writing-mode: horizontal-tb;
+      text-align: start;
+      right: 3.5rem;
+      top: 3.5rem;
+    }
+  }
+}
+
+@media (min-width: 60rem) {
+  footer > nav {
+    @include horizontal {
+      position: absolute;
+      writing-mode: vertical-lr;
+      text-align: start;
+      left: 3.5rem;
+      top: 3.5rem;
+    }
+  }
+}
+
+footer > nav {
+  font-size: x-large;
+  font-weight: 900;
+  text-align: end;
+
+  @media (prefers-color-scheme: dark) {
+    font-weight: 700;
+  }
+
+  a {
+    background: inherit;
+    color: inherit;
+
+    &:link, &:visited {
+      background: inherit;
+      opacity: 0.5;
+    }
+
+    &:hover {
+      background: inherit;
+      opacity: 1;
+    }
+  }
+}
+
+a {
+  color: black;
+  text-decoration: none;
+  background: #eee;
+  border-radius: 0.2rem;
+  padding-left: 0.2rem;
+
+  @media (prefers-color-scheme: dark) {
+    background: #333;
+    color: white;
+  }
+}
+
+a:hover {
+  background: silver;
+
+  @media (prefers-color-scheme: dark) {
+    background: #555;
+  }
+}
+
+nav.articles > ul {
+  list-style: none;
+  padding: 0;
+
+  > li {
+    margin-right: 0.4rem;
+  }
+}
+
+article {
+  text-align: justify;
+}
+
+article, article * {
+  align-items: stretch;
+}
+
+em {
+  font-style: normal;
+  //text-emphasis: dot;
+}
+
+q {
+  @include vertical {
+    &:before {
+      content: '\300c';
+    }
+
+    &:after {
+      content: '\300d';
+    }
+  }
+}
+
+cite {
+  &:lang(ko), &:lang(ja), &:lang(zh) {
+    font-style: normal;
+  }
+}
+
+blockquote {
+  font-size: smaller;
+}
+
+hr {
+  border: none;
+
+  @include vertical {
+    border-right: 1px solid #ccc;
+
+    @media (prefers-color-scheme: dark) {
+      border-right-color: #333;
+    }
+  }
+
+  @include horizontal {
+    border-top: 1px solid #ccc;
+
+    @media (prefers-color-scheme: dark) {
+      border-top-color: #333;
+    }
+  }
+}
+
+sup.footnote-ref > a {
+  border: none;
+  padding: 0;
+  background: none;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 900;
+  font-size: smaller;
+  writing-mode: horizontal-tb;
+  margin-top: -0.3rem;
+
+  &:hover {
+    color: gray;
+
+    @media (prefers-color-scheme: dark) {
+      color: silver;
+    }
+  }
+}
+
+.footnotes > ol {
+  list-style: none;
+  font-size: smaller;
+  padding: 0;
+
+  counter-reset: footnote-counter;
+  > li {
+    &:before {
+      counter-increment: footnote-counter;
+      content: counter(footnote-counter);
+      float: left;
+      margin-right: 0.5rem;
+    }
+
+    a.reversefootnote {
+      writing-mode: horizontal-tb;
+      background: transparent;
+      color: gray;
+      transform: scaleX(-1);
+    }
+  }
+}
+
+sup > a.footnote, .footnotes > ol > li:before {
+  writing-mode: horizontal-tb;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 900;
+
+  @media (prefers-color-scheme: dark) {
+    font-weight: 700;
+  }
+}
