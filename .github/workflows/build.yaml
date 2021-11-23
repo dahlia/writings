@@ -1,0 +1,30 @@
+name: build
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - uses: denoland/setup-deno@v1
+      with:
+        deno-version: v1.x
+    - run: sudo apt-get install -y sassc
+    - uses: actions/cache@v2
+      with:
+        key: deno
+        path: |
+          ${{ github.workspace }}/.bin
+          ${{ github.workspace }}/.deno
+    - run: deno cache main.ts
+    - run: 'deno run -A main.ts -u "$BASE_URL" $EXTRA_ARGS'
+      env:
+        BASE_URL: ${{ secrets.BASE_URL }}
+        EXTRA_ARGS: ${{ secrets.EXTRA_ARGS }}
+    - uses: sebastianpopp/ftp-action@releases/v2
+      with:
+        host: ${{ secrets.FTP_HOST }}
+        user: ${{ secrets.FTP_USER }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        localDir: public_html
+        remoteDir: ${{ secrets.FTP_REMOTE_DIR }}
