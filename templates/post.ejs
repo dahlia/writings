@@ -8,15 +8,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title><%= title %> &mdash; <%= site.title %></title>
     <link rel="stylesheet" href="<%= baseUrl %>/static/style.css">
-    <% for (const [key, url] of multiViews) { %>
-      <% if (key == null) { %>
-        <link rel="canonical" href="<%= url.href %>">
-      <% } else if (key !== content.key) { %>
-        <link
-          rel="alternate"
-          hreflang="<%= key.language.toString().toLowerCase() %>"
-          href="<%= url.href %>">
-      <% } %>
+    <% for (const [key, url] of multiViews) if (key == null) { %>
+      <link rel="canonical" href="<%= url.href %>">
     <% } %>
   </head>
   <body>
@@ -24,7 +17,24 @@
       <%- body %>
     </article>
     <footer>
-      <nav><a href="<%= baseUrl %>"><%= site.title %></a></nav>
+      <nav>
+        <div class="site">
+          <a href="<%= baseUrl %>" rel="index"><%= site.title %></a>
+        </div>
+        <div class="languages">
+          <% for (const [key, url] of multiViews) { %>
+            <% if (key != null) { %>
+              <a rel="alternate"
+                class="<%= key.language === content.language ? 'this' : '' %>"
+                hreflang="<%= key.language.toString().toLowerCase() %>"
+                href="<%= url.href %>">
+                <%= site.languageNames[key.language.toString()] ??
+                      await key.language.getLanguageName(key.language) %>
+              </a>
+            <% } %>
+          <% } %>
+        </div>
+      </nav>
     </footer>
   </body>
 </html>

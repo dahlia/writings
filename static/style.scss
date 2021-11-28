@@ -1,4 +1,5 @@
 @import url(https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@100;300;700;900&display=swap);
+@import url(https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;500&display=swap);
 
 @mixin vertical {
   :root:lang(ko-Kore):not(.horizontal) &,
@@ -70,10 +71,28 @@ body {
 }
 
 @media (min-height: 60rem) {
-  footer > nav {
+  article > :first-child {
+    @include vertical { margin: default; }
+  }
+
+  footer > nav > div.site {
     @include vertical {
-      position: absolute;
       writing-mode: horizontal-tb;
+      text-align: start;
+      top: 3.5rem;
+      right: 3.5rem;
+    }
+  }
+}
+
+@media (min-width: 60rem) {
+  article > :first-child {
+    @include horizontal { margin: default; }
+  }
+
+  footer > nav > div.site {
+    @include horizontal {
+      writing-mode: vertical-lr;
       text-align: start;
       right: 3.5rem;
       top: 3.5rem;
@@ -81,19 +100,29 @@ body {
   }
 }
 
-@media (min-width: 60rem) {
-  footer > nav {
-    @include horizontal {
-      position: absolute;
-      writing-mode: vertical-lr;
-      text-align: start;
-      left: 3.5rem;
-      top: 3.5rem;
-    }
+body > article > :first-child {
+  @include vertical {
+    margin-left: 2.5rem;
+  }
+
+  @include horizontal {
+    margin-bottom: 2.5rem;
   }
 }
 
-footer > nav {
+footer > nav > .site {
+  position: absolute;
+
+  @include vertical {
+    bottom: 3.5rem;
+    right: 2.5rem;
+  }
+
+  @include horizontal {
+    top: 2.5rem;
+    right: 3.5rem;
+  }
+
   font-size: x-large;
   font-weight: 900;
   text-align: end;
@@ -114,6 +143,78 @@ footer > nav {
     &:hover {
       background: inherit;
       opacity: 1;
+    }
+  }
+}
+
+@media (min-height: 60rem) {
+  footer > nav > div.languages {
+    @include vertical {
+      bottom: 3.5rem;
+      right: 3.5rem;
+      writing-mode: horizontal-tb;
+
+      a { margin: 0; margin-left: 0.5rem; font-size: smaller; }
+      a:hover { border: none; border-bottom: 3px solid; }
+    }
+  }
+}
+
+@media (min-width: 60rem) {
+  footer > nav > div.languages {
+    @include horizontal {
+      top: 3.5rem;
+      left: 3.5rem;
+      writing-mode: vertical-lr;
+
+      a { margin: 0; margin-bottom: 1rem; font-size: smaller; }
+      a:hover { border: none; border-right: 3px solid; }
+    }
+  }
+}
+
+footer > nav > .languages {
+  position: absolute;
+  text-align: end;
+
+  @include vertical {
+    bottom: 3.5rem;
+    right: 4.5rem;
+
+    a { margin-top: 1rem; }
+  }
+
+  @include horizontal {
+    top: 4.5rem;
+    right: 3.5rem;
+
+    a { margin-left: 0.5rem; }
+  }
+
+  a {
+    font-family: 'Noto Sans CJK KR', 'Noto Sans KR', sans-serif;
+    font-size: small;
+    font-weight: 100;
+    background: none;
+    opacity: 0.75;
+
+    &:hover {
+      border-radius: 0;
+      opacity: 1;
+
+      @include vertical {
+        border-right: 3px solid;
+      }
+
+      @include horizontal {
+        border-bottom: 3px solid;
+      }
+    }
+
+    &.this, &.this:hover {
+      font-weight: 500;
+      opacity: 1;
+      cursor: default;
     }
   }
 }
