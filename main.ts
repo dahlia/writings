@@ -165,6 +165,8 @@ try {
   if (!(e instanceof Deno.errors.PermissionDenied)) throw e;
 }
 const seonbi = new Seonbi(seonbiConfig);
+await seonbi.start();
+window.onunload = () => seonbi.stop();
 
 // Seonbi presets:
 const koKoreVPreset: Options = {
