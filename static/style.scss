@@ -43,11 +43,11 @@ body {
   margin: auto;
 
   @include vertical {
-    max-height: 45rem;
+    max-height: calc(100% - 8rem);
   }
 
   @include horizontal {
-    max-width: 45rem;
+    max-width: calc(100% - 8rem);
   }
 
   font-family: 'Noto Serif CJK KR', 'Noto Serif KR', serif;
@@ -71,6 +71,12 @@ body {
 }
 
 @media (min-height: 60rem) {
+  body {
+    @include vertical {
+      max-height: 45rem;
+    }
+  }
+
   article > :first-child {
     @include vertical { margin: default; }
   }
@@ -86,6 +92,12 @@ body {
 }
 
 @media (min-width: 60rem) {
+  body {
+    @include horizontal {
+      max-width: 45rem;
+    }
+  }
+
   article > :first-child {
     @include horizontal { margin: default; }
   }
