@@ -176,6 +176,7 @@ footer > nav > .site {
 footer > nav > .languages {
   position: absolute;
   text-align: end;
+  width: fit-content;
 
   @include vertical {
     bottom: 3.5rem;
