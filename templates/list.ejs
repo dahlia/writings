@@ -41,7 +41,8 @@
           <time datetime="<%= published.toISOString() %>">
             <%= formatMonthDate(published) %>
           </time>
-          <% const postMetadata = await post.get(content.key)?.getMetadata() %>
+          <% const postMetadata =
+              await post.get([...post.keys()][0])?.getMetadata() %>
           <a href="<%= postMetadata?.multiViews?.get(null) ?? post.path %>">
             <%= await queryTitle(post) %>
           </a>
