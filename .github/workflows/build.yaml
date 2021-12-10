@@ -17,7 +17,13 @@ jobs:
           ${{ github.workspace }}/.bin
           ${{ github.workspace }}/.deno
     - run: deno cache main.ts
-    - run: 'deno run -A main.ts -u "$BASE_URL" $EXTRA_ARGS'
+    - run: |
+        deno run \
+          --allow-all \
+          --import-map import_map.json \
+          main.ts \
+            -u "$BASE_URL" \
+            $EXTRA_ARGS'
       env:
         BASE_URL: ${{ secrets.BASE_URL }}
         EXTRA_ARGS: ${{ secrets.EXTRA_ARGS }}

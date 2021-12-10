@@ -1,8 +1,8 @@
-import * as YAML from "https://deno.land/std@0.115.1/encoding/yaml.ts";
-import { parse } from "https://deno.land/std@0.115.1/flags/mod.ts";
-import { serve } from "https://deno.land/std@0.115.1/http/server_legacy.ts";
-import { info } from "https://deno.land/std@0.115.1/log/mod.ts";
-import { join } from "https://deno.land/std@0.115.1/path/mod.ts";
+import * as YAML from "std/encoding/yaml.ts";
+import { parse } from "std/flags/mod.ts";
+import { serve } from "std/http/server_legacy.ts";
+import { info } from "std/log/mod.ts";
+import { join } from "std/path/mod.ts";
 import {
   Configuration as SeonbiConfiguration,
   DEFAULT_CONFIGURATION,
@@ -12,7 +12,7 @@ import {
 import staticFiles from "https://deno.land/x/static_files@1.1.0/mod.ts";
 import { toWords } from "https://cdn.skypack.dev/number-to-chinese-words@1.0.20";
 import toArray from "https://esm.sh/@async-generators/to-array@0.1.0";
-import { renderTemplate } from "https://deno.land/x/jikji@0.2.2/ejs.ts";
+import { renderTemplate } from "jikji/ejs.ts";
 import {
   abbr,
   attrs,
@@ -23,8 +23,8 @@ import {
   markdown,
   MarkdownIt,
   title,
-} from "https://deno.land/x/jikji@0.2.2/markdown.ts";
-import { defaultMime } from "https://deno.land/x/jikji@0.2.2/mime.ts";
+} from "jikji/markdown.ts";
+import { defaultMime } from "jikji/mime.ts";
 import {
   anyRepresentations,
   Content,
@@ -42,14 +42,14 @@ import {
   setupConsoleLog,
   when,
   writeFiles,
-} from "https://deno.land/x/jikji@0.2.2/mod.ts";
-import { detectLanguage } from "https://deno.land/x/jikji@0.2.2/path.ts";
+} from "jikji/mod.ts";
+import { detectLanguage } from "jikji/path.ts";
 import {
   htmlRedirector,
   intoMultiView,
   phpNegotiator,
-} from "https://deno.land/x/jikji@0.2.2/multiview.ts";
-import sass from "https://deno.land/x/jikji@0.2.2/sass.ts";
+} from "jikji/multiview.ts";
+import sass from "jikji/sass.ts";
 
 // Takes CLI arguments & options:
 const args = parse(Deno.args, {

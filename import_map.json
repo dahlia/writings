@@ -1,0 +1,6 @@
+{
+  "imports": {
+    "std/": "https://deno.land/std@0.115.1/",
+    "jikji/": "https://deno.land/x/jikji@0.2.2/"
+  }
+}
