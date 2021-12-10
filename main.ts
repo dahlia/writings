@@ -11,10 +11,8 @@ import {
 } from "https://deno.land/x/seonbi@0.3.1/mod.ts";
 import staticFiles from "https://deno.land/x/static_files@1.1.0/mod.ts";
 import { toWords } from "https://cdn.skypack.dev/number-to-chinese-words@1.0.20";
-import {
-  renderListTemplate,
-  renderTemplate,
-} from "https://deno.land/x/jikji@0.2.2/ejs.ts";
+import toArray from "https://esm.sh/@async-generators/to-array@0.1.0";
+import { renderTemplate } from "https://deno.land/x/jikji@0.2.2/ejs.ts";
 import {
   abbr,
   attrs,
@@ -35,6 +33,8 @@ import {
   intoDirectory,
   LanguageTag,
   Pipeline,
+  queryPublished,
+  queryTitle,
   rebase,
   replaceBasename,
   Resource,
@@ -363,7 +363,7 @@ const pipeline = scanFiles(["2*/**/*.md", "static/**/*"], { root: srcDir })
     renderTemplate("templates/post.ejs", { baseUrl, site }),
     { negate: true, language: null },
   )
-  // Adds the home page (a list of posts):
+  // Aggregate posts into a list (for each language):
   .addSummaries(async function* (p: Pipeline) {
     const languages = new Set<LanguageTag>();
     for await (const r of p) {
@@ -371,33 +371,47 @@ const pipeline = scanFiles(["2*/**/*.md", "static/**/*"], { root: srcDir })
         if (key.language != null) languages.add(key.language);
       }
     }
-    const lists = [...languages].map((language: LanguageTag) => {
-      const posts = p.filter(
+    const lists = [...languages].map(async (language: LanguageTag) => {
+      const pipeline = p.filter(
         anyRepresentations({
           type: ["text/html", "application/php"],
           language,
         }),
       );
-      const ctx = {
-        baseUrl,
-        site,
-        languages,
-        formatYear: yearFormatters[language.toString()],
-        formatMonthDate: monthDateFormatters[language.toString()],
-      };
-      return renderListTemplate(
-        "templates/list.ejs",
-        posts,
-        ctx,
-        undefined,
+      return new Content(
+        async () => [
+          "",
+          {
+            posts: (await toArray(pipeline)).reverse(),
+            formatYear: yearFormatters[language.toString()],
+            formatMonthDate: monthDateFormatters[language.toString()],
+          },
+        ],
+        "text/html; list=1",
         language,
+        await pipeline.getLastModified(),
+        undefined,
+        (await toArray(pipeline)).map((r) => r.path.toString()).join("\n"),
       );
     });
     yield new Resource(baseUrl, await Promise.all(lists));
   })
   // Turns multi-language lists into distinct files, and give index pages for
   // redirecting browsers to their preferred language:
-  .divide(multiViewDivider, (r: Resource) => r.path.href === baseUrl.href);
+  .divide(
+    multiViewDivider,
+    (r: Resource) => r.path.href === baseUrl.href,
+  )
+  // Renders the list pages using the EJS template:
+  .transform(
+    renderTemplate("templates/list.ejs", {
+      baseUrl,
+      site,
+      queryPublished,
+      queryTitle,
+    }),
+    { exactType: "text/html; list=1" },
+  );
 
 if (args.remove) {
   // Empty the output directory (public_html/) first:

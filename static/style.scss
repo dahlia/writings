@@ -59,15 +59,6 @@ body {
     color: #ddd;
     font-weight: 100;
   }
-
-  > h1 {
-    margin-right: 0;
-    font-weight: 900;
-
-    @media (prefers-color-scheme: dark) {
-      font-weight: 700;
-    }
-  }
 }
 
 @media (min-height: 60rem) {
@@ -160,7 +151,7 @@ footer > nav > .site {
 }
 
 @media (min-height: 60rem) {
-  footer > nav > div.languages {
+  footer > nav > div.languages, body > header > nav.languages {
     @include vertical {
       bottom: 3.5rem;
       right: 3.5rem;
@@ -173,7 +164,7 @@ footer > nav > .site {
 }
 
 @media (min-width: 60rem) {
-  footer > nav > div.languages {
+  footer > nav > div.languages, body > header > nav.languages {
     @include horizontal {
       top: 3.5rem;
       left: 3.5rem;
@@ -185,7 +176,7 @@ footer > nav > .site {
   }
 }
 
-footer > nav > .languages {
+footer > nav > .languages, header > nav.languages {
   position: absolute;
   text-align: end;
   width: fit-content;

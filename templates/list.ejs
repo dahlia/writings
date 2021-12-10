@@ -7,11 +7,25 @@
     <link rel="stylesheet" href="<%= baseUrl %>/static/style.css">
   </head>
   <body>
-    <h1><%= site.title %></h1>
+    <header>
+      <h1><%= site.title %></h1>
+      <nav class="languages">
+        <% for (const [key, url] of multiViews) { %>
+          <% if (key != null) { %>
+            <a rel="alternate"
+              class="<%= key.language === content.language ? 'this' : '' %>"
+              hreflang="<%= key.language.toString().toLowerCase() %>"
+              href="<%= url.href %>">
+              <%= site.languageNames[key.language.toString()] ??
+                    await key.language.getLanguageName(key.language) %>
+            </a>
+          <% } %>
+        <% } %>
+      </nav>
+    </header>
     <nav class="articles">
       <% let year = null %>
-      <% const posts = [...list].reverse() %>
-      <% for await (const post of posts) { %>
+      <% for (const post of metadata.posts ?? []) { %>
         <% const published = await queryPublished(post) %>
         <% const pubYear = published.getFullYear() %>
         <% if (year !== pubYear) { %>
@@ -27,7 +41,7 @@
           <time datetime="<%= published.toISOString() %>">
             <%= formatMonthDate(published) %>
           </time>
-          <% const postMetadata = await post.get(content.key).getMetadata() %>
+          <% const postMetadata = await post.get(content.key)?.getMetadata() %>
           <a href="<%= postMetadata?.multiViews?.get(null) ?? post.path %>">
             <%= await queryTitle(post) %>
           </a>
