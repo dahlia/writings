@@ -16,14 +16,21 @@ jobs:
         path: |
           ${{ github.workspace }}/.bin
           ${{ github.workspace }}/.deno
-    - run: deno cache main.ts
+    - run: |
+        deno cache \
+          --import-map import_map.json \
+          --reload \
+          --lock=lock.json \
+          main.ts
     - run: |
         deno run \
           --allow-all \
           --import-map import_map.json \
+          --lock=lock.json \
+          --cached-only \
           main.ts \
             -u "$BASE_URL" \
-            $EXTRA_ARGS'
+            $EXTRA_ARGS
       env:
         BASE_URL: ${{ secrets.BASE_URL }}
         EXTRA_ARGS: ${{ secrets.EXTRA_ARGS }}
