@@ -41,14 +41,10 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         localDir: public_html
         remoteDir: ${{ secrets.FTP_REMOTE_DIR }}
-    - uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-    - uses: azure/CLI@v1
-      with:
-        inlineScript: >-
-          az cdn endpoint purge
-          --content-paths '/*'
-          --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
-          --profile-name ${{ secrets.AZURE_CDN_PROFILE }}
-          --name ${{ secrets.AZURE_CDN_ENDPOINT }}
+    - uses: chetan/invalidate-cloudfront-action@v2
+      env:
+        DISTRIBUTION: ${{ secrets.DISTRIBUTION }}
+        PATHS: "/*"
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
