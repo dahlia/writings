@@ -1,10 +1,26 @@
 <!DOCTYPE html>
-<html lang="<%= content.language %>" prefix="og: http://ogp.me/ns#">
+<html lang="<%= content.language %>">
   <head>
     <meta charset="utf-8">
+    <meta
+      name="generator"
+      content="Jikji &lt;https://github.com/dahlia/jikji&gt;">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title><%= site.title %></title>
     <link rel="stylesheet" href="<%= baseUrl %>/static/style.css">
+    <% for (const feed of metadata.feeds) { %>
+      <% for (const alternate of feed) { %>
+        <link
+          rel="alternate"
+          type="<%= alternate.type %>"
+          href="<%= feed.path %>"
+          hreflang="<%= alternate.language %>"
+          title="Atom 1.0
+            (<%= site.languageNames[alternate.language.toString()] ??
+            await alternate.language.getLanguageName(alternate.language) %>)"
+        />
+      <% } %>
+    <% } %>
   </head>
   <body>
     <header>

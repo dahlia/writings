@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html
-  prefix="og: http://ogp.me/ns#"
   lang="<%= content.language.toString().toLowerCase() %>"
   class="<%= metadata?.writingMode ?? "" %>">
   <head>
     <meta charset="utf-8">
+    <meta
+      name="generator"
+      content="Jikji &lt;https://github.com/dahlia/jikji&gt;">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title><%= title %> &mdash; <%= site.title %></title>
     <link rel="stylesheet" href="<%= baseUrl %>/static/style.css">

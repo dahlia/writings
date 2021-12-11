@@ -9,7 +9,8 @@ jobs:
     - uses: denoland/setup-deno@v1
       with:
         deno-version: v1.x
-    - run: sudo apt-get install -y sassc
+    - run: sudo apt-get install -y git-restore-mtime sassc
+    - run: git restore-mtime
     - uses: actions/cache@v2
       with:
         key: deno

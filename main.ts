@@ -12,7 +12,7 @@ import {
 import staticFiles from "https://deno.land/x/static_files@1.1.0/mod.ts";
 import { toWords } from "https://cdn.skypack.dev/number-to-chinese-words@1.0.20";
 import toArray from "https://esm.sh/@async-generators/to-array@0.1.0";
-import { renderTemplate } from "jikji/ejs.ts";
+import { renderListTemplate, renderTemplate } from "jikji/ejs.ts";
 import {
   abbr,
   attrs,
@@ -135,7 +135,16 @@ const baseUrl: URL = new URL(
 );
 
 // The site settings and metadata:
-const site = YAML.parse(await Deno.readTextFile(join(srcDir, "site.yaml")));
+const site = YAML.parse(
+  await Deno.readTextFile(join(srcDir, "site.yaml")),
+) as Record<string, unknown>;
+
+// Set of languages:
+const languages = new Set<LanguageTag>(
+  Object.keys(site.languageNames as Record<string, string>).map((k) =>
+    LanguageTag.fromString(k)
+  ),
+);
 
 // Markdown engine:
 function getMarkdownIt(): typeof MarkdownIt {
@@ -358,19 +367,35 @@ const pipeline = scanFiles(["2*/**/*.md", "static/**/*"], { root: srcDir })
     multiViewDivider,
     (r: Resource) => r.path.href.endsWith("/") && r.size > 1,
   )
-  // Renders the whole page for posts using the EJS template:
-  .transform(
-    renderTemplate("templates/post.ejs", { baseUrl, site }),
-    { negate: true, language: null },
-  )
-  // Aggregate posts into a list (for each language):
+  // Aggregate posts into feeds (for each language):
   .addSummaries(async function* (p: Pipeline) {
-    const languages = new Set<LanguageTag>();
-    for await (const r of p) {
-      for (const key of r.keys()) {
-        if (key.language != null) languages.add(key.language);
-      }
+    for (const language of languages) {
+      const posts = p.filter(
+        anyRepresentations({
+          type: ["text/html", "application/php"],
+          language,
+        }),
+      );
+      const feedUrl = new URL(
+        `./feed.${language.toString().toLowerCase()}.xml`,
+        baseUrl,
+      );
+      yield new Resource(feedUrl, [
+        await renderListTemplate(
+          "templates/feed.ejs",
+          posts,
+          { baseUrl, feedUrl, site },
+          "application/atom+xml",
+          language,
+        ),
+      ]);
     }
+  })
+  // Aggregate posts into lists (for each language):
+  .addSummaries(async function* (p: Pipeline) {
+    const feeds = p.filter(
+      anyRepresentations({ type: ["application/atom+xml"] }),
+    );
     const lists = [...languages].map(async (language: LanguageTag) => {
       const pipeline = p.filter(
         anyRepresentations({
@@ -383,6 +408,7 @@ const pipeline = scanFiles(["2*/**/*.md", "static/**/*"], { root: srcDir })
           "",
           {
             posts: (await toArray(pipeline)).reverse(),
+            feeds: (await toArray(feeds)),
             formatYear: yearFormatters[language.toString()],
             formatMonthDate: monthDateFormatters[language.toString()],
           },
@@ -401,6 +427,11 @@ const pipeline = scanFiles(["2*/**/*.md", "static/**/*"], { root: srcDir })
   .divide(
     multiViewDivider,
     (r: Resource) => r.path.href === baseUrl.href,
+  )
+  // Renders the whole page for posts using the EJS template:
+  .transform(
+    renderTemplate("templates/post.ejs", { baseUrl, site }),
+    (c: Content) => c.matches({ exactType: "text/html" }) && c.language != null,
   )
   // Renders the list pages using the EJS template:
   .transform(
