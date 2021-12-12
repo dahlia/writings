@@ -1,5 +1,9 @@
 @import url(https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@100;300;700;900&display=swap);
 @import url(https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;500&display=swap);
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@100;300;700;900&display=swap');
+@import url(https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;500&display=swap);
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@100;300;700;900&display=swap');
+@import url(https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;500&display=swap);
 
 @mixin vertical {
   :root:lang(ko-Kore):not(.horizontal) &,
@@ -17,12 +21,6 @@
   :root:lang(zh).horizontal &,
   :root.horizontal & {
     @content;
-  }
-}
-
-body {
-  @include vertical {
-    writing-mode: vertical-rl;
   }
 }
 
@@ -44,14 +42,26 @@ body {
 
   @include vertical {
     max-height: calc(100% - 8rem);
+
+    writing-mode: vertical-rl;
+    font-feature-settings: "vchw" 1, "vhal";
+    -moz-font-feature-settings: "vchw" 1, "vhal";
+    -webkit-font-feature-settings: "vchw" 1, "vhal";
   }
 
   @include horizontal {
-    max-width: calc(100% - 8rem);
+    max-width: calc(100% - 4rem);
+
+    font-feature-settings: "chws" 1, "halt";
+    -moz-font-feature-settings: "chws" 1, "halt";
+    -webkit-font-feature-settings: "chws" 1, "halt";
   }
 
-  font-family: 'Noto Serif CJK KR', 'Noto Serif KR', serif;
-  font-size: larger;
+  &:lang(ko) { font-family: 'Noto Serif CJK KR', 'Noto Serif KR', serif; }
+  &:lang(ja) { font-family: 'Noto Serif CJK JP', 'Noto Serif JP', serif; }
+  &:lang(zh) { font-family: 'Noto Serif TC', 'Noto Serif TC', serif; }
+
+  font-variant-east-asian: proportional-width;
   line-height: 1.6;
 
   @media (prefers-color-scheme: dark) {
@@ -61,10 +71,17 @@ body {
   }
 }
 
-@media (min-height: 60rem) {
+@media (min-height: 50rem) {
   body {
     @include vertical {
-      max-height: 45rem;
+      max-height: unquote('min(45rem, 100% - 18rem)');
+      font-size: larger;
+    }
+
+    & > article:first-child, & > nav.articles {
+      @include vertical {
+        padding-right: 0;
+      }
     }
   }
 
@@ -78,19 +95,24 @@ body {
       text-align: start;
       top: 3.5rem;
       right: 3.5rem;
+      font-size: x-large;
     }
   }
 }
 
-@media (min-width: 60rem) {
+@media (min-width: 50rem) {
   body {
     @include horizontal {
-      max-width: 45rem;
+      max-width: unquote('min(45rem, 100% - 18rem)');
+      font-size: larger;
     }
-  }
 
-  article > :first-child {
-    @include horizontal { margin: default; }
+    & > article:first-child, & > nav.articles {
+      @include horizontal() {
+        padding-top: 0;
+        margin: default;
+      }
+    }
   }
 
   footer > nav > div.site {
@@ -99,17 +121,29 @@ body {
       text-align: start;
       right: 3.5rem;
       top: 3.5rem;
+      font-size: x-large;
     }
+  }
+}
+
+body > article {
+  @include vertical { padding-right: 3rem; }
+  @include horizontal { padding-top: 3rem; }
+}
+
+body > nav.articles {
+  @include horizontal {
+    padding-top: 1.5rem;
   }
 }
 
 body > article > :first-child {
   @include vertical {
-    margin-left: 2.5rem;
+    margin-left: 1.5rem;
   }
 
   @include horizontal {
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.5rem;
   }
 }
 
@@ -119,14 +153,16 @@ footer > nav > .site {
   @include vertical {
     bottom: 3.5rem;
     right: 2.5rem;
+    width: fit-content;
   }
 
   @include horizontal {
     top: 2.5rem;
-    right: 3.5rem;
+    right: 2.5rem;
+    max-width: 10rem;
   }
 
-  font-size: x-large;
+  font-size: large;
   font-weight: 900;
   text-align: end;
 
@@ -150,12 +186,13 @@ footer > nav > .site {
   }
 }
 
-@media (min-height: 60rem) {
+@media (min-height: 50rem) {
   footer > nav > div.languages, body > header > nav.languages {
     @include vertical {
       bottom: 3.5rem;
       right: 3.5rem;
       writing-mode: horizontal-tb;
+      font-size: smaller;
 
       a { margin: 0; margin-left: 0.5rem; font-size: smaller; }
       a:hover { border: none; border-bottom: 3px solid; }
@@ -163,12 +200,13 @@ footer > nav > .site {
   }
 }
 
-@media (min-width: 60rem) {
+@media (min-width: 50rem) {
   footer > nav > div.languages, body > header > nav.languages {
     @include horizontal {
       top: 3.5rem;
       left: 3.5rem;
       writing-mode: vertical-lr;
+      font-size: smaller;
 
       a { margin: 0; margin-bottom: 1rem; font-size: smaller; }
       a:hover { border: none; border-right: 3px solid; }
@@ -176,28 +214,45 @@ footer > nav > .site {
   }
 }
 
-footer > nav > .languages, header > nav.languages {
-  position: absolute;
-  text-align: end;
-  width: fit-content;
+footer > nav > .languages {
+  font-size: x-small;
 
   @include vertical {
-    bottom: 3.5rem;
-    right: 4.5rem;
+    a { margin-bottom: 1rem; }
+  }
+
+  @include horizontal {
+    top: 2.7rem;
+  }
+}
+
+body > header > .languages {
+  font-size: small;
+
+  @include vertical {
+    bottom: 3rem;
 
     a { margin-top: 1rem; }
   }
 
   @include horizontal {
-    top: 4.5rem;
-    right: 3.5rem;
+    top: 6.5rem;
 
-    a { margin-left: 0.5rem; }
+    a { margin-right: 0.5rem; padding-left: 0; }
+  }
+}
+
+footer > nav > .languages, header > nav.languages {
+  position: absolute;
+  width: fit-content;
+
+  @include vertical {
+    right: 3rem;
+    max-height: 15rem;
   }
 
   a {
     font-family: 'Noto Sans CJK KR', 'Noto Sans KR', sans-serif;
-    font-size: small;
     font-weight: 100;
     background: none;
     opacity: 0.75;
@@ -254,7 +309,9 @@ nav.articles > ul {
 }
 
 article {
-  text-align: justify;
+  @include vertical {
+    text-align: justify;
+  }
 }
 
 article, article * {
@@ -286,6 +343,7 @@ cite {
 
 blockquote {
   font-size: smaller;
+  margin: 1rem;
 }
 
 hr {

@@ -30,7 +30,8 @@
           <% if (key != null) { %>
             <a rel="alternate"
               class="<%= key.language === content.language ? 'this' : '' %>"
-              hreflang="<%= key.language.toString().toLowerCase() %>"
+              hreflang="<%= key.language %>"
+              lang="<%= key.language %>"
               href="<%= url.href %>">
               <%= site.languageNames[key.language.toString()] ??
                     await key.language.getLanguageName(key.language) %>
