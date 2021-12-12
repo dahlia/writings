@@ -35,21 +35,16 @@ jobs:
       env:
         BASE_URL: ${{ secrets.BASE_URL }}
         EXTRA_ARGS: ${{ secrets.EXTRA_ARGS }}
-    - uses: sebastianpopp/ftp-action@releases/v2
+    - uses: sand4rt/ftp-deployer@v1.3
       with:
+        sftp: true
+        port: 22
         host: ${{ secrets.FTP_HOST }}
-        user: ${{ secrets.FTP_USER }}
+        username: ${{ secrets.FTP_USER }}
         password: ${{ secrets.FTP_PASSWORD }}
-        localDir: public_html
-        remoteDir: ${{ secrets.FTP_REMOTE_DIR }}
-        options: >-
-          --delete
-          --delete-first
-          --overwrite
-          --ignore-size
-          --ignore-time
-          --transfer-all
-          --verbose
+        remote_folder: ${{ secrets.FTP_REMOTE_DIR }}
+        local_folder: public_html
+        cleanup: true
     - uses: chetan/invalidate-cloudfront-action@v2
       env:
         DISTRIBUTION: ${{ secrets.DISTRIBUTION }}
