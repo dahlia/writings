@@ -42,6 +42,14 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         localDir: public_html
         remoteDir: ${{ secrets.FTP_REMOTE_DIR }}
+        options: >-
+          --delete
+          --delete-first
+          --overwrite
+          --ignore-size
+          --ignore-time
+          --transfer-all
+          --verbose
     - uses: chetan/invalidate-cloudfront-action@v2
       env:
         DISTRIBUTION: ${{ secrets.DISTRIBUTION }}
