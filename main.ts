@@ -219,8 +219,9 @@ const yearFormatters: Record<string, ((y: number) => string)> = {
 
 // Functions to format a month-date in various languages:
 const monthDateFormatters: Record<string, ((d: Date) => string)> = {
-  "ko-Kore": (d: Date) => `${toWords(d.getMonth())}月 ${toWords(d.getDate())}日`,
-  "ko-Hang-KR": (d: Date) => `${d.getMonth()}월 ${d.getDate()}일`,
+  "ko-Kore": (d: Date) =>
+    `${toWords(d.getMonth() + 1)}月 ${toWords(d.getDate())}日`,
+  "ko-Hang-KR": (d: Date) => `${d.getMonth() + 1}월 ${d.getDate()}일`,
 };
 
 // Extends a custom dictionary to the given Seonbi options:
