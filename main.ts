@@ -10,7 +10,6 @@ import {
   Seonbi,
 } from "https://deno.land/x/seonbi@0.3.1/mod.ts";
 import staticFiles from "https://deno.land/x/static_files@1.1.0/mod.ts";
-import { toWords } from "https://cdn.skypack.dev/number-to-chinese-words@1.0.20";
 import toArray from "https://esm.sh/@async-generators/to-array@0.1.0";
 import { renderListTemplate, renderTemplate } from "jikji/ejs.ts";
 import {
@@ -220,7 +219,15 @@ const yearFormatters: Record<string, ((y: number) => string)> = {
 // Functions to format a month-date in various languages:
 const monthDateFormatters: Record<string, ((d: Date) => string)> = {
   "ko-Kore": (d: Date) =>
-    `${toWords(d.getMonth() + 1)}月 ${toWords(d.getDate())}日`,
+    `${
+      (d.getMonth() + 1).toLocaleString("zh-Hant-CN-u-nu-hanidec", {
+        useGrouping: false,
+      })
+    }月 ${
+      d.getDate().toLocaleString("zh-Hant-CN-u-nu-hanidec", {
+        useGrouping: false,
+      })
+    }日`,
   "ko-Hang-KR": (d: Date) => `${d.getMonth() + 1}월 ${d.getDate()}일`,
 };
 
