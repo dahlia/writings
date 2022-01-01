@@ -16,6 +16,13 @@
   </head>
   <body>
     <article>
+      <time datetime="<%= published.toISOString() %>">
+        <% const formatDate = dateFormatters[content.language.toString()] %>
+        <%= formatDate == null
+          ? published.toLocaleDateString(content.language.toString(),
+                                         { dateStyle: "long" })
+          : formatDate(published) %>
+      </time>
       <%- body %>
     </article>
     <footer>

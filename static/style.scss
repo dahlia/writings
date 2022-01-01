@@ -130,21 +130,27 @@ body {
 body > article {
   @include vertical { padding-right: 3rem; }
   @include horizontal { padding-top: 3rem; }
+
+  & > time:first-of-type {
+    float: right;
+    opacity: 0.5;
+    font-size: smaller;
+  }
+
+  & > h1:first-of-type {
+    @include vertical {
+      margin-left: 1.5rem;
+    }
+
+    @include horizontal {
+      margin-bottom: 1.5rem;
+    }
+  }
 }
 
 body > nav.articles {
   @include horizontal {
     padding-top: 1.5rem;
-  }
-}
-
-body > article > :first-child {
-  @include vertical {
-    margin-left: 1.5rem;
-  }
-
-  @include horizontal {
-    margin-bottom: 1.5rem;
   }
 }
 

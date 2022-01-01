@@ -231,6 +231,14 @@ const monthDateFormatters: Record<string, ((d: Date) => string)> = {
   "ko-Hang-KR": (d: Date) => `${d.getMonth() + 1}월 ${d.getDate()}일`,
 };
 
+// Functions to format a full date in various languages:
+const dateFormatters: Record<string, ((d: Date) => string)> = {
+  "ko-Kore": (d: Date) =>
+    `${yearFormatters["ko-Kore"](d.getFullYear())} ${
+      monthDateFormatters["ko-Kore"](d)
+    }`,
+};
+
 // Extends a custom dictionary to the given Seonbi options:
 async function withDictionary(
   options: Options,
@@ -438,7 +446,7 @@ const pipeline = scanFiles(["2*/**/*.md", "static/**/*"], { root: srcDir })
   )
   // Renders the whole page for posts using the EJS template:
   .transform(
-    renderTemplate("templates/post.ejs", { baseUrl, site }),
+    renderTemplate("templates/post.ejs", { baseUrl, site, dateFormatters }),
     (c: Content) => c.matches({ exactType: "text/html" }) && c.language != null,
   )
   // Renders the list pages using the EJS template:
