@@ -7,3 +7,7 @@ authors:
     ko-Hang-KR: 홍민희
     ko-Kore: 洪民憙
   uri: https://hongminhee.org/
+head: |
+  <script defer
+          data-domain="writings.hongminhee.org"
+          src="https://plausible.io/js/plausible.js"></script>

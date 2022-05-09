@@ -13,6 +13,7 @@
     <% for (const [key, url] of multiViews) if (key == null) { %>
       <link rel="canonical" href="<%= url.href %>">
     <% } %>
+    <%- site.head ?? '' %>
   </head>
   <body>
     <article>
