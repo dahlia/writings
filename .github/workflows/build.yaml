@@ -19,14 +19,12 @@ jobs:
           ${{ github.workspace }}/.deno
     - run: |
         deno cache \
-          --import-map import_map.json \
           --reload \
           --lock=lock.json \
           main.ts
     - run: |
         deno run \
           --allow-all \
-          --import-map import_map.json \
           --lock=lock.json \
           --cached-only \
           main.ts \
