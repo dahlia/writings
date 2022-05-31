@@ -35,9 +35,7 @@
      <% }) %>
      <published><%= await queryPublished(post) %></published>
      <updated><%= post.lastModified.toISOString() %></updated>
-     <content type="html"><![CDATA[
-       <%= await content.getBody() %>
-     ]]></content>
+     <content type="html"><%= await content.getBody() %></content>
     </entry>
   <% } %>
 </feed>
