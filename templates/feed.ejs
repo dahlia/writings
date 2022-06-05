@@ -33,7 +33,7 @@
          <id><%= url %></id>
        <% } %>
      <% }) %>
-     <published><%= await queryPublished(post) %></published>
+     <published><%= (await queryPublished(post)).toISOString() %></published>
      <updated><%= post.lastModified.toISOString() %></updated>
      <content type="html"><%= await content.getBody() %></content>
     </entry>
