@@ -18,7 +18,7 @@
   <% } %>
   <updated><%= content.lastModified.toISOString() %></updated>
 
-  <% for (const post of list) { %>
+  <% for (const post of list.reverse()) { %>
     <entry>
      <title><%= await queryTitle(post) %></title>
      <% const content = post.get([...post.keys()][0]) %>
