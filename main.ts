@@ -10,7 +10,7 @@ import {
   Seonbi,
 } from "https://deno.land/x/seonbi@0.3.1/mod.ts";
 import staticFiles from "https://deno.land/x/static_files@1.1.0/mod.ts";
-import toArray from "https://esm.sh/@async-generators/to-array@0.1.0";
+import { toArray } from "https://x.nest.land/aitertools@0.4.0-dev.15+3f191d7/collections.ts";
 import { renderListTemplate, renderTemplate } from "jikji/ejs.ts";
 import {
   abbr,
@@ -272,6 +272,21 @@ async function withDictionary(
   };
 }
 
+// To order resources by their paths, in particular, to order posts by their
+// published dates (e.g., /2022/1/foo.ko-Kore.md should be followed by
+// /2022/12/bar.ko-Kore.md), the following function compare two paths by
+// their components:
+function compareResourcesByPath(a: Resource, b: Resource) {
+  const aPath = a.path.href.split("/");
+  const bPath = b.path.href.split("/");
+  const commonLength = Math.min(aPath.length, bPath.length);
+  for (let i = 0; i < commonLength; i++) {
+    if (aPath[i] < bPath[i]) return -1;
+    if (aPath[i] > bPath[i]) return 1;
+  }
+  return aPath.length < bPath.length ? -1 : 1;
+}
+
 // The divider that turn multi-language contents into distinct files, and
 // give index pages for redirecting browser to their preferred language:
 const multiViewDivider = intoMultiView({
@@ -423,7 +438,8 @@ const pipeline = scanFiles(["2*/**/*.md", "static/**/*"], { root: srcDir })
         async () => [
           "",
           {
-            posts: (await toArray(pipeline)).reverse(),
+            posts: (await toArray(pipeline)).sort(compareResourcesByPath)
+              .reverse(),
             feeds: (await toArray(feeds)),
             formatYear: yearFormatters[language.toString()],
             formatMonthDate: monthDateFormatters[language.toString()],

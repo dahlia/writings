@@ -11,7 +11,12 @@ jobs:
     - uses: denoland/setup-deno@v1
       with:
         deno-version: v1.x
-    - run: sudo apt-get install -y git-restore-mtime sassc
+    - id: setup-seonbi
+      uses: dahlia/seonbi/setup@5467d6ccb54de4927c58fa62bf7b6ff0ef05ed84
+      with:
+        seonbi-version: 0.3.*
+        add-to-path: false
+    - run: sudo apt-get install -y git-restore-mtime
     - run: git restore-mtime
     - uses: actions/cache@v2
       with:
@@ -20,19 +25,13 @@ jobs:
           ${{ github.workspace }}/.bin
           ${{ github.workspace }}/.deno
     - run: |
-        deno cache \
-          --reload \
-          --lock=lock.json \
-          main.ts
-    - run: |
-        deno run \
-          --allow-all \
-          --lock=lock.json \
-          --cached-only \
-          main.ts \
-            -u "$BASE_URL" \
-            $EXTRA_ARGS
+        deno cache --reload main.ts
+    - run: deno check main.ts
+    - run: deno lint
+    - run: deno task build -u "$BASE_URL" $EXTRA_ARGS
       env:
+        SEONBI_API: ${{ steps.setup-seonbi.outputs.seonbi-api-path }}
+        TMPDIR: ${{ runner.temp }}
         BASE_URL: ${{ secrets.BASE_URL }}
         EXTRA_ARGS: ${{ secrets.EXTRA_ARGS }}
     - uses: sand4rt/ftp-deployer@v1.3
