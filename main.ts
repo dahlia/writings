@@ -1,6 +1,7 @@
-import * as YAML from "std/encoding/yaml.ts";
+import * as YAML from "std/yaml/mod.ts";
 import { parse } from "std/flags/mod.ts";
-import { serve } from "std/http/server_legacy.ts";
+import { Handler, serve } from "std/http/mod.ts";
+import { serveDir } from "std/http/file_server.ts";
 import { info } from "std/log/mod.ts";
 import { join } from "std/path/mod.ts";
 import {
@@ -8,9 +9,8 @@ import {
   DEFAULT_CONFIGURATION,
   Options,
   Seonbi,
-} from "https://deno.land/x/seonbi@0.3.1/mod.ts";
-import staticFiles from "https://deno.land/x/static_files@1.1.0/mod.ts";
-import { toArray } from "https://x.nest.land/aitertools@0.4.0-dev.15+3f191d7/collections.ts";
+} from "https://deno.land/x/seonbi@0.3.6/mod.ts";
+import { toArray } from "https://deno.land/x/aitertools@0.4.0/collections.ts";
 import { renderListTemplate, renderTemplate } from "jikji/ejs.ts";
 import {
   abbr,
@@ -53,6 +53,7 @@ import sass from "jikji/sass.ts";
 // Takes CLI arguments & options:
 const args = parse(Deno.args, {
   boolean: ["help", "verbose", "remove", "watch", "serve", "php"],
+  string: ["base-url", "out-dir", "host", "port"],
   default: {
     help: false,
     verbose: false,
@@ -146,7 +147,7 @@ const languages = new Set<LanguageTag>(
 );
 
 // Markdown engine:
-function getMarkdownIt(): typeof MarkdownIt {
+function getMarkdownIt(): MarkdownIt {
   const md = new MarkdownIt("commonmark", { html: true, xhtmlOut: false })
     .enable("table")
     .use(abbr)
@@ -156,8 +157,13 @@ function getMarkdownIt(): typeof MarkdownIt {
     .use(footnote)
     .use(title);
   const footnoteCaption = md.renderer.rules.footnote_caption;
-  md.renderer.rules.footnote_caption = (tokens: [unknown], idx: number) =>
-    footnoteCaption(tokens, idx).replace(/^\[|\]$/g, "");
+  md.renderer.rules.footnote_caption = function () {
+    // deno-lint-ignore no-explicit-any
+    return footnoteCaption!.apply(this, arguments as unknown as any).replace(
+      /^\[|\]$/g,
+      "",
+    );
+  };
   return md;
 }
 
@@ -502,19 +508,12 @@ async function build(): Promise<void> {
 
 // Runs an HTTP server:
 async function runServer(): Promise<void> {
-  const httpd = serve({ port: args.port, hostname: args.host });
-  const server = staticFiles(outDir, {
-    setHeaders(headers: Headers, path: string) {
-      const type = defaultMime.getType(path);
-      if (type != null) {
-        headers.set("Content-Type", type);
-      }
-    },
-  });
+  const server: Handler = (req) => serveDir(req, { fsRoot: outDir });
   info(`Listening on http://${args.host}:${args.port}/`);
-  for await (const req of httpd) {
-    await server(req);
-  }
+  await serve(server, {
+    port: parseInt(args.port.toString()),
+    hostname: args.host,
+  });
 }
 
 await Promise.all(args.serve ? [build(), runServer()] : [build()]);
