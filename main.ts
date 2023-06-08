@@ -170,7 +170,12 @@ function getMarkdownIt(): MarkdownIt {
 // Seonbi:
 const seonbiConfig: SeonbiConfiguration = {
   ...DEFAULT_CONFIGURATION,
-  process: { downloadPath: ".bin/seonbi-api", distType: "stable" },
+  process: {
+    downloadPath: Deno.build.os === "windows"
+      ? ".bin\\seonbi-api.exe"
+      : ".bin/seonbi-api",
+    distType: "stable",
+  },
 };
 try {
   const seonbiPath = Deno.env.get("SEONBI_API");
@@ -191,7 +196,14 @@ const koKoreVPreset: Options = {
   ellipsis: true,
   emDash: true,
   stop: "Vertical",
-  hanja: null,
+  hanja: {
+    rendering: "HanjaInRuby",
+    reading: {
+      initialSoundLaw: true,
+      useDictionaries: ["kr-stdict"],
+      dictionary: {},
+    },
+  },
 };
 const koHangKRPreset: Options = {
   contentType: "text/html",

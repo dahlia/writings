@@ -349,6 +349,14 @@ cite {
   }
 }
 
+ruby {
+  &:lang(ko-Kore) {
+    rt {
+      visibility: hidden;
+    }
+  }
+}
+
 blockquote {
   font-size: smaller;
   margin: 1rem;
