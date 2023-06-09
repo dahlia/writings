@@ -1,6 +1,0 @@
-{
-  "imports": {
-    "std/": "https://deno.land/std@0.190.0/",
-    "jikji/": "https://raw.githubusercontent.com/dahlia/jikji/fe58545180b099392d8fb1548bd5f2ab5502786c/"
-  }
-}

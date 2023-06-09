@@ -1,15 +1,14 @@
 {
   "$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
-  "importMap": "import_map.json",
+  "imports": {
+    "std/": "https://deno.land/std@0.190.0/",
+    "jikji/": "https://raw.githubusercontent.com/dahlia/jikji/c53a5f64f318aa973619c48b07d3727de6d64a47/"
+  },
   "lint": {
-    "files": {
-      "exclude": ["public_html", "static"]
-    }
+    "exclude": ["public_html", "static"]
   },
   "fmt": {
-    "files": {
-      "include": ["main.ts", "tmpdir.ts"]
-    }
+    "include": ["main.ts", "tmpdir.ts"]
   },
   "lock": "lock.json",
   "tasks": {

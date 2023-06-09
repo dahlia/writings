@@ -1,10 +1,6 @@
 {
   "version": "2",
   "remote": {
-    "https://cdn.skypack.dev/-/markdown-it-attrs@v4.1.4-07fL5dpTTMiFwyolPikl/dist=es2019,mode=imports/optimized/markdown-it-attrs.js": "1ee7b8eb25ee9d10ad69640a397eaa5532a855ba14b41b3bb08c7109cb1641e7",
-    "https://cdn.skypack.dev/-/markdown-it-title@v4.0.0-cG63fKvsTtgQqWa16hbd/dist=es2019,mode=imports/optimized/markdown-it-title.js": "41c8e73e4093e199049117ca7df5448f99deed9e544d68636c38281dabaae29b",
-    "https://cdn.skypack.dev/markdown-it-attrs@4.1.4": "055d02d5e7df0297bb4a8e5b6cd3e203ea0a635132cdedcca0eca75df6b39f3d",
-    "https://cdn.skypack.dev/markdown-it-title@4.0.0": "4cbc57fc77585992755fafa35ee711b15d27e331a5064802049a17294d51441d",
     "https://deno.land/std@0.108.0/_util/assert.ts": "2f868145a042a11d5ad0a3c748dcf580add8a0dbc0e876eaa0026303a5488f58",
     "https://deno.land/std@0.108.0/_util/os.ts": "dfb186cc4e968c770ab6cc3288bd65f4871be03b93beecae57d657232ecffcac",
     "https://deno.land/std@0.108.0/bytes/bytes_list.ts": "3bff6a09c72b2e0b1e92e29bd3b135053894196cca07a2bba842901073efe5cb",
@@ -87,8 +83,6 @@
     "https://deno.land/std@0.162.0/testing/_diff.ts": "a23e7fc2b4d8daa3e158fa06856bedf5334ce2a2831e8bf9e509717f455adb2c",
     "https://deno.land/std@0.162.0/testing/_format.ts": "cd11136e1797791045e639e9f0f4640d5b4166148796cad37e6ef75f7d7f3832",
     "https://deno.land/std@0.162.0/testing/asserts.ts": "1e340c589853e82e0807629ba31a43c84ebdcdeca910c4a9705715dfdb0f5ce8",
-    "https://deno.land/std@0.177.0/node/internal/idna.ts": "034043ac9273eb5ba83112c926dba1777775f1eca40e021c8703cd1720bedd9f",
-    "https://deno.land/std@0.177.0/node/punycode.ts": "3ebe08fc8883eb997edfc27c2a56057d59ed8e64a1e8a50c00494e860f9c77d6",
     "https://deno.land/std@0.190.0/_util/asserts.ts": "178dfc49a464aee693a7e285567b3d0b555dc805ff490505a8aae34f9cfb1462",
     "https://deno.land/std@0.190.0/_util/os.ts": "d932f56d41e4f6a6093d56044e29ce637f8dcc43c5a90af43504a889cf1775e3",
     "https://deno.land/std@0.190.0/async/abortable.ts": "fd682fa46f3b7b16b4606a5ab52a7ce309434b76f820d3221bdfb862719a15d7",
@@ -232,61 +226,91 @@
     "https://deno.land/x/mimetypes@v1.0.0/src/mime.ts": "7cd7590eae6127dc1abfe710900fc749e94d5c715ffe8a148e59fe20ee21a9a5",
     "https://deno.land/x/process@v0.3.0/mod.ts": "2906e33c2a9a36ecfc174d78f899a23a913b6d6044145ee86b38357da64feeae",
     "https://deno.land/x/seonbi@0.3.6/mod.ts": "fed463baccc4a070ad906cd2991cc7d65ae7c6f31ae4d83a0aa63b437fba7e9f",
-    "https://esm.sh/markdown-it-abbr@1.0.4": "b6ef70da37e9c74f7b1435cab3e464eaad6b2564b31a8099aa7bca25cce6ea9d",
-    "https://esm.sh/markdown-it-bracketed-spans@1.0.1": "4a2db42291c24f1d70ba42ff86045779e76636894ff7142e5b2563b8e4a256ad",
-    "https://esm.sh/markdown-it-deflist@2.1.0": "4d9562e40959c4123845ee1565b9c426544bbf9298105d164b702e44fb05a3d1",
-    "https://esm.sh/markdown-it-footnote@3.0.3": "65ad7871472dff3d366bd1d3549e3d21c4d5e135f58144b0a0523f2a3ec40a7c",
-    "https://esm.sh/markdown-it@13.0.1": "e565831caf0378e14278d3c109449cc549e570200a7a0beabf6f4eb882cc9ee4",
-    "https://esm.sh/v124/@types/linkify-it@3.0.2/index.d.ts": "6503fb6addf62f9b10f8564d9869ad824565a914ec1ac3dd7d13da14a3f57036",
-    "https://esm.sh/v124/@types/markdown-it-footnote@3.0.0/index.d.ts": "274790d4385f0824832663934ae8cb22ab5966ebe46a837111c4b43405bf9a6a",
-    "https://esm.sh/v124/@types/markdown-it@12.2.3/index.d.ts": "7bc55451529c611188c869a4d2e981008bac080e2ea6142dff93de58c8823ea2",
-    "https://esm.sh/v124/@types/markdown-it@12.2.3/lib/common/utils.d.ts": "3576dc18a7a2e0e1ee1db0454a4d2b0ce74e926f96bc4819629c05ff21ecf4b8",
-    "https://esm.sh/v124/@types/markdown-it@12.2.3/lib/helpers/index.d.ts": "ac9e9e9012d15d15faef201e23178eec83d6aab8dc7c172a8c57bfb07baa3cf7",
-    "https://esm.sh/v124/@types/markdown-it@12.2.3/lib/helpers/parse_link_destination.d.ts": "b8396e9024d554b611cbe31a024b176ba7116063d19354b5a02dccd8f0118989",
-    "https://esm.sh/v124/@types/markdown-it@12.2.3/lib/helpers/parse_link_label.d.ts": "7849f0ffaa4577329c66f4c00515fc2993d3e52b5c99ed16dc6a8559e61ba22f",
-    "https://esm.sh/v124/@types/markdown-it@12.2.3/lib/helpers/parse_link_title.d.ts": "1bf83cace5d74d1c584e63427c3feac76c0274ae546841fd48758526230ebe16",
-    "https://esm.sh/v124/@types/markdown-it@12.2.3/lib/index.d.ts": "e85936bc6b60af0030cd8df5049031427a84b69ed815140ea8c4ab0d1459ee66",
-    "https://esm.sh/v124/@types/markdown-it@12.2.3/lib/parser_block.d.ts": "d9c8037c97a151947e9f049284e2e10d257532980492a6ea7326f6b3e28a7d92",
-    "https://esm.sh/v124/@types/markdown-it@12.2.3/lib/parser_core.d.ts": "f04f830427f4adf73db1ea8bd39df609c21e74086b990cb2ecfb10368d67688c",
-    "https://esm.sh/v124/@types/markdown-it@12.2.3/lib/parser_inline.d.ts": "49930ce4761c2ac60f98f1a3a7320392229e89108c102f088814dd384db32216",
-    "https://esm.sh/v124/@types/markdown-it@12.2.3/lib/renderer.d.ts": "3f343629e870d00a8e211b0a51a9b96527ccea553360a434186fcd13b761c945",
-    "https://esm.sh/v124/@types/markdown-it@12.2.3/lib/ruler.d.ts": "8b155c4757d197969553de3762c8d23d5866710301de41e1b66b97c9ed867003",
-    "https://esm.sh/v124/@types/markdown-it@12.2.3/lib/rules_block/state_block.d.ts": "6acbd71c661359da7da4576f665b23a2a5fa48a5b8c6a1cbed84088abb54e909",
-    "https://esm.sh/v124/@types/markdown-it@12.2.3/lib/rules_core/state_core.d.ts": "17ab570aea2ea2021916c213ee7ab38b4f0171ece3226a0437b0f6e75aaf791c",
-    "https://esm.sh/v124/@types/markdown-it@12.2.3/lib/rules_inline/state_inline.d.ts": "3e39be2305d5270293d2ca86c978d219ba1e0e538fced9856c272f44ca067cdd",
-    "https://esm.sh/v124/@types/markdown-it@12.2.3/lib/token.d.ts": "95902d5561c6aac5dfc40568a12b0aca324037749dcd32a81f23423bfde69bab",
-    "https://esm.sh/v124/@types/mdurl@1.0.2/decode.d.ts": "951b37f7d86f6012f09e6b35f1de57c69d75f16908cb0adaa56b93675ea0b853",
-    "https://esm.sh/v124/@types/mdurl@1.0.2/encode.d.ts": "f313731860257325f13351575f381fef333d4dfe30daf5a2e72f894208feea08",
-    "https://esm.sh/v124/@types/mdurl@1.0.2/format.d.ts": "3e434702a8c1f22208a5d72c85542edc03184884f5fa555c2d7d54ba0c04f422",
-    "https://esm.sh/v124/@types/mdurl@1.0.2/index.d.ts": "c6abf7edfdd84a1c62dab04b042357c8850233fcdcb239cdc9d71fbaaa978958",
-    "https://esm.sh/v124/@types/mdurl@1.0.2/parse.d.ts": "84078571bb76f94dbe1c8f7c598e762a52a5de001cdf50030f373d98ba262d89",
-    "https://esm.sh/v124/entities@3.0.1/deno/lib/maps/entities.json.js": "9c37d97690fed5b195a7c2cecc104fd69303550f0335b685a10b349406704e92",
-    "https://esm.sh/v124/linkify-it@4.0.1/deno/linkify-it.mjs": "2f2482fba1ce97b0a6c93973756b8b1d6e235af360b6d83aa676189958c5f8ca",
-    "https://esm.sh/v124/markdown-it-abbr@1.0.4/deno/markdown-it-abbr.mjs": "7ca9b325ad415504339f64e3575e05fa0c125c279a918886a281559865f1b29f",
-    "https://esm.sh/v124/markdown-it-bracketed-spans@1.0.1/deno/markdown-it-bracketed-spans.mjs": "72c4d32db2f14147f25a7837067d3380a4089ca2e0714b99775e3ffcb185f2b5",
-    "https://esm.sh/v124/markdown-it-deflist@2.1.0/deno/markdown-it-deflist.mjs": "31cae6a34ec830f0fd9494076370a183b3a1792b99f28feb12195bb6815c5ca0",
-    "https://esm.sh/v124/markdown-it-footnote@3.0.3/deno/markdown-it-footnote.mjs": "220a7f36b6e6ccf822bd187fd05dc876f358c594c0c1288fb8724ca92e14f8f5",
-    "https://esm.sh/v124/markdown-it@13.0.1/deno/markdown-it.mjs": "1193556d4f400d9387953b3c434867cef80ea8006ec19cd39e797f541d163785",
-    "https://esm.sh/v124/mdurl@1.0.1/deno/mdurl.mjs": "37981d53ad70b7f8562036da8242828e93a8df8dbdb6395ef6b9a2d908dde59b",
-    "https://esm.sh/v124/uc.micro@1.0.6/deno/categories/Cc/regex.js": "07637afc17e62ef6c1c1a2ad5e57e43fddbf9ebb5e60a4740ba483c04bbbea25",
-    "https://esm.sh/v124/uc.micro@1.0.6/deno/categories/P/regex.js": "05b809bf8a7dc8efe5488ff85b454d106e91b3762c2b08e2573840ee45f77b7c",
-    "https://esm.sh/v124/uc.micro@1.0.6/deno/categories/Z/regex.js": "b8aba3daf02484a9de1057917f9c6ca43a0cc0538fa74f2507a1861cadc613a0",
-    "https://esm.sh/v124/uc.micro@1.0.6/deno/properties/Any/regex.js": "d0ef91e3e1e464419b9c3124a2c0602278d2ff1eff58f9f29347a6326381ff00",
-    "https://esm.sh/v124/uc.micro@1.0.6/deno/uc.micro.mjs": "5e408e4115fe2b3c623baad2b5604b045ab6c31dc446c43006e40a4edba2345c",
-    "https://raw.githubusercontent.com/dahlia/jikji/fe58545180b099392d8fb1548bd5f2ab5502786c/content.ts": "ab506de27951a270c70d69c74c4a32c0e938f25023acb4ccc7e49886a86121dc",
-    "https://raw.githubusercontent.com/dahlia/jikji/fe58545180b099392d8fb1548bd5f2ab5502786c/ejs.ts": "07f6dbed039b875a7aaec71a581b90ce9f58739a1f72b5e7e12043b744ac262a",
-    "https://raw.githubusercontent.com/dahlia/jikji/fe58545180b099392d8fb1548bd5f2ab5502786c/file.ts": "7df0d52d6f885719d122fbb9651030ea4b0d0ffe5f2a2d3aabce39bb98fff842",
-    "https://raw.githubusercontent.com/dahlia/jikji/fe58545180b099392d8fb1548bd5f2ab5502786c/language_tag.ts": "165e3a3db1ac99a9c04fa1c5ab44b8b4d19f0dd762708125965f7cd5e5293620",
-    "https://raw.githubusercontent.com/dahlia/jikji/fe58545180b099392d8fb1548bd5f2ab5502786c/log.ts": "8e3f2c8316da30cb79ba70c6be70cb98786573c1e430d9bd762d2ac517b3b1e8",
-    "https://raw.githubusercontent.com/dahlia/jikji/fe58545180b099392d8fb1548bd5f2ab5502786c/markdown.ts": "22cf374e25768a7c6e49442c6ae44c4e2f376f7cf568a07b160b14007816ac11",
-    "https://raw.githubusercontent.com/dahlia/jikji/fe58545180b099392d8fb1548bd5f2ab5502786c/media_type.ts": "7b8b24ceb81f2c62590e1e5dc4c87d60a5d62c246ad7d0f248176cd79a71b45d",
-    "https://raw.githubusercontent.com/dahlia/jikji/fe58545180b099392d8fb1548bd5f2ab5502786c/metadata.ts": "5f060d0497d04285b49f99ad81a6bde490238031d3868eb9dd2e07194645acfd",
-    "https://raw.githubusercontent.com/dahlia/jikji/fe58545180b099392d8fb1548bd5f2ab5502786c/mime.ts": "8d22f0ae4772e61f6a4d20227cb6f5000253b188ffd3fdbd37009976b16629a6",
-    "https://raw.githubusercontent.com/dahlia/jikji/fe58545180b099392d8fb1548bd5f2ab5502786c/mod.ts": "5fc537a86bf0f54c15136eb79fec589ff3584ad43abd05fbb765b131ce69b34d",
-    "https://raw.githubusercontent.com/dahlia/jikji/fe58545180b099392d8fb1548bd5f2ab5502786c/multiview.ts": "968c7328dad135ea77984ab389d9e006103920358b8e7fbf63c2ea837bf0201c",
-    "https://raw.githubusercontent.com/dahlia/jikji/fe58545180b099392d8fb1548bd5f2ab5502786c/path.ts": "01909bc5efcffdc1786cfc88d86949bb27a3fe47bbf7d072c304fd8b5a3890b4",
-    "https://raw.githubusercontent.com/dahlia/jikji/fe58545180b099392d8fb1548bd5f2ab5502786c/pipeline.ts": "e2da27499d10ad0f2a2da8d71fdcbd9ecd85bf46c01f44aa5a945fa985d64674",
-    "https://raw.githubusercontent.com/dahlia/jikji/fe58545180b099392d8fb1548bd5f2ab5502786c/resource.ts": "9eea76260bafe22cbeeb72db9fc34b3607313759d474d05ba4763429731eead8",
-    "https://raw.githubusercontent.com/dahlia/jikji/fe58545180b099392d8fb1548bd5f2ab5502786c/sass.ts": "6e74fdd9c4197ed389c5d4cc382d8682a70892202c9de404058c6b6d0548f287"
+    "https://raw.githubusercontent.com/dahlia/jikji/c53a5f64f318aa973619c48b07d3727de6d64a47/content.ts": "ab506de27951a270c70d69c74c4a32c0e938f25023acb4ccc7e49886a86121dc",
+    "https://raw.githubusercontent.com/dahlia/jikji/c53a5f64f318aa973619c48b07d3727de6d64a47/ejs.ts": "07f6dbed039b875a7aaec71a581b90ce9f58739a1f72b5e7e12043b744ac262a",
+    "https://raw.githubusercontent.com/dahlia/jikji/c53a5f64f318aa973619c48b07d3727de6d64a47/file.ts": "7df0d52d6f885719d122fbb9651030ea4b0d0ffe5f2a2d3aabce39bb98fff842",
+    "https://raw.githubusercontent.com/dahlia/jikji/c53a5f64f318aa973619c48b07d3727de6d64a47/language_tag.ts": "165e3a3db1ac99a9c04fa1c5ab44b8b4d19f0dd762708125965f7cd5e5293620",
+    "https://raw.githubusercontent.com/dahlia/jikji/c53a5f64f318aa973619c48b07d3727de6d64a47/log.ts": "8e3f2c8316da30cb79ba70c6be70cb98786573c1e430d9bd762d2ac517b3b1e8",
+    "https://raw.githubusercontent.com/dahlia/jikji/c53a5f64f318aa973619c48b07d3727de6d64a47/markdown.ts": "5889222f2f301175ce35d0bc053af95923297e0d1be68265ac2f5dcc44232d56",
+    "https://raw.githubusercontent.com/dahlia/jikji/c53a5f64f318aa973619c48b07d3727de6d64a47/media_type.ts": "7b8b24ceb81f2c62590e1e5dc4c87d60a5d62c246ad7d0f248176cd79a71b45d",
+    "https://raw.githubusercontent.com/dahlia/jikji/c53a5f64f318aa973619c48b07d3727de6d64a47/metadata.ts": "5f060d0497d04285b49f99ad81a6bde490238031d3868eb9dd2e07194645acfd",
+    "https://raw.githubusercontent.com/dahlia/jikji/c53a5f64f318aa973619c48b07d3727de6d64a47/mime.ts": "8d22f0ae4772e61f6a4d20227cb6f5000253b188ffd3fdbd37009976b16629a6",
+    "https://raw.githubusercontent.com/dahlia/jikji/c53a5f64f318aa973619c48b07d3727de6d64a47/mod.ts": "5fc537a86bf0f54c15136eb79fec589ff3584ad43abd05fbb765b131ce69b34d",
+    "https://raw.githubusercontent.com/dahlia/jikji/c53a5f64f318aa973619c48b07d3727de6d64a47/multiview.ts": "968c7328dad135ea77984ab389d9e006103920358b8e7fbf63c2ea837bf0201c",
+    "https://raw.githubusercontent.com/dahlia/jikji/c53a5f64f318aa973619c48b07d3727de6d64a47/path.ts": "01909bc5efcffdc1786cfc88d86949bb27a3fe47bbf7d072c304fd8b5a3890b4",
+    "https://raw.githubusercontent.com/dahlia/jikji/c53a5f64f318aa973619c48b07d3727de6d64a47/pipeline.ts": "e2da27499d10ad0f2a2da8d71fdcbd9ecd85bf46c01f44aa5a945fa985d64674",
+    "https://raw.githubusercontent.com/dahlia/jikji/c53a5f64f318aa973619c48b07d3727de6d64a47/resource.ts": "9eea76260bafe22cbeeb72db9fc34b3607313759d474d05ba4763429731eead8",
+    "https://raw.githubusercontent.com/dahlia/jikji/c53a5f64f318aa973619c48b07d3727de6d64a47/sass.ts": "6e74fdd9c4197ed389c5d4cc382d8682a70892202c9de404058c6b6d0548f287"
+  },
+  "npm": {
+    "specifiers": {
+      "markdown-it-abbr@1.0.4": "markdown-it-abbr@1.0.4",
+      "markdown-it-attrs@4.1.4": "markdown-it-attrs@4.1.4_markdown-it@13.0.1",
+      "markdown-it-bracketed-spans@1.0.1": "markdown-it-bracketed-spans@1.0.1",
+      "markdown-it-deflist@2.1.0": "markdown-it-deflist@2.1.0",
+      "markdown-it-footnote@3.0.3": "markdown-it-footnote@3.0.3",
+      "markdown-it-title@4.0.0": "markdown-it-title@4.0.0",
+      "markdown-it@13.0.1": "markdown-it@13.0.1"
+    },
+    "packages": {
+      "argparse@2.0.1": {
+        "integrity": "sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==",
+        "dependencies": {}
+      },
+      "entities@3.0.1": {
+        "integrity": "sha512-WiyBqoomrwMdFG1e0kqvASYfnlb0lp8M5o5Fw2OFq1hNZxxcNk8Ik0Xm7LxzBhuidnZB/UtBqVCgUz3kBOP51Q==",
+        "dependencies": {}
+      },
+      "linkify-it@4.0.1": {
+        "integrity": "sha512-C7bfi1UZmoj8+PQx22XyeXCuBlokoyWQL5pWSP+EI6nzRylyThouddufc2c1NDIcP9k5agmN9fLpA7VNJfIiqw==",
+        "dependencies": {
+          "uc.micro": "uc.micro@1.0.6"
+        }
+      },
+      "markdown-it-abbr@1.0.4": {
+        "integrity": "sha512-ZeA4Z4SaBbYysZap5iZcxKmlPL6bYA8grqhzJIHB1ikn7njnzaP8uwbtuXc4YXD5LicI4/2Xmc0VwmSiFV04gg==",
+        "dependencies": {}
+      },
+      "markdown-it-attrs@4.1.4_markdown-it@13.0.1": {
+        "integrity": "sha512-53Zfv8PTb6rlVFDlD106xcZHKBSsRZKJ2IW/rTxEJBEVbVaoxaNsmRkG0HXfbHl2SK8kaxZ2QKqdthWy/QBwmA==",
+        "dependencies": {
+          "markdown-it": "markdown-it@13.0.1"
+        }
+      },
+      "markdown-it-bracketed-spans@1.0.1": {
+        "integrity": "sha512-ffDHx7bdOEecvo/EPpsatFLNnLZBRdj+ZF/v6gGJh0ixU0oVWxUUeJn5daVnT0sn0MU73G9oPDTqBX82z99fnw==",
+        "dependencies": {}
+      },
+      "markdown-it-deflist@2.1.0": {
+        "integrity": "sha512-3OuqoRUlSxJiuQYu0cWTLHNhhq2xtoSFqsZK8plANg91+RJQU1ziQ6lA2LzmFAEes18uPBsHZpcX6We5l76Nzg==",
+        "dependencies": {}
+      },
+      "markdown-it-footnote@3.0.3": {
+        "integrity": "sha512-YZMSuCGVZAjzKMn+xqIco9d1cLGxbELHZ9do/TSYVzraooV8ypsppKNmUJ0fVH5ljkCInQAtFpm8Rb3eXSrt5w==",
+        "dependencies": {}
+      },
+      "markdown-it-title@4.0.0": {
+        "integrity": "sha512-IeDImxQEbKDGSvTFHFM1FAbHUXa0xqYYwNNM1I2EceCLuA7yqUG8yMyACR+5lt0z1VJWu//yTc+ANIKXSv6rTA==",
+        "dependencies": {}
+      },
+      "markdown-it@13.0.1": {
+        "integrity": "sha512-lTlxriVoy2criHP0JKRhO2VDG9c2ypWCsT237eDiLqi09rmbKoUetyGHq2uOIRoRS//kfoJckS0eUzzkDR+k2Q==",
+        "dependencies": {
+          "argparse": "argparse@2.0.1",
+          "entities": "entities@3.0.1",
+          "linkify-it": "linkify-it@4.0.1",
+          "mdurl": "mdurl@1.0.1",
+          "uc.micro": "uc.micro@1.0.6"
+        }
+      },
+      "mdurl@1.0.1": {
+        "integrity": "sha512-/sKlQJCBYVY9Ers9hqzKou4H6V5UWc/M59TH2dvkt+84itfnq7uFOMLpOiOS4ujvHP4etln18fmIxA5R5fll0g==",
+        "dependencies": {}
+      },
+      "uc.micro@1.0.6": {
+        "integrity": "sha512-8Y75pvTYkLJW2hWQHXxoqRgV7qb9B+9vFEtidML+7koHUFapnVJAZ6cKs+Qjz5Aw3aZWHMC6u0wJE3At+nSGwA==",
+        "dependencies": {}
+      }
+    }
   }
 }

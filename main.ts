@@ -23,7 +23,6 @@ import {
   MarkdownIt,
   title,
 } from "jikji/markdown.ts";
-import { defaultMime } from "jikji/mime.ts";
 import {
   anyRepresentations,
   Content,
@@ -147,7 +146,7 @@ const languages = new Set<LanguageTag>(
 );
 
 // Markdown engine:
-function getMarkdownIt(): MarkdownIt {
+function getMarkdownIt(): typeof MarkdownIt {
   const md = new MarkdownIt("commonmark", { html: true, xhtmlOut: false })
     .enable("table")
     .use(abbr)
