@@ -228,6 +228,7 @@ const koKoreHPreset: Options = {
 
 // Functions to format a year in various languages:
 const yearFormatters: Record<string, ((y: number) => string)> = {
+  "en": (y: number) => y.toString(),
   "ko-Kore": (y: number) =>
     `${y.toLocaleString("zh-Hant-CN-u-nu-hanidec", { useGrouping: false })}年`,
   "ko-Hang-KR": (y: number) => `${y}년`,
@@ -235,6 +236,8 @@ const yearFormatters: Record<string, ((y: number) => string)> = {
 
 // Functions to format a month-date in various languages:
 const monthDateFormatters: Record<string, ((d: Date) => string)> = {
+  "en": (d: Date) =>
+    d.toLocaleDateString("en-US", { month: "long", day: "numeric" }),
   "ko-Kore": (d: Date) =>
     `${
       (d.getMonth() + 1).toLocaleString("zh-Hant-CN-u-nu-hanidec", {
@@ -409,6 +412,19 @@ const pipeline = scanFiles(["2*/**/*.md", "static/**/*"], { root: srcDir })
       }),
     { language: "ko-Kore" },
   )
+  // Makes typographic adjustments on en (English) posts:
+  .transform((c: Content) =>
+    c.replace({
+      async body() {
+        const orig = await c.getBody();
+        const text = typeof orig == "string" ? orig : decoder.decode(orig);
+        return text
+          .replaceAll("---", "\u2013")
+          .replaceAll("--", "\u2014")
+          .replaceAll("...", "\u2026");
+      },
+    })
+  )
   // Turns multi-language posts into distinct files, and give index pages for
   // redirecting browsers to their preferred language:
   .divide(
@@ -520,7 +536,6 @@ async function build(): Promise<void> {
 // Runs an HTTP server:
 async function runServer(): Promise<void> {
   const server: Handler = (req) => serveDir(req, { fsRoot: outDir });
-  info(`Listening on http://${args.host}:${args.port}/`);
   await serve(server, {
     port: parseInt(args.port.toString()),
     hostname: args.host,

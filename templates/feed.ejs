@@ -4,7 +4,7 @@
   <link rel="self" type="application/atom+xml" href="<%= feedUrl %>" />
   <link rel="alternate" type="text/html" href="<%= baseUrl %>" />
   <generator uri="https://github.com/dahlia/jikji">Jikji</generator>
-  <title><%= site.title %></title>
+  <title><%= site.titles[content.language.toString()] %></title>
   <% for (const author of site.authors) { %>
     <author>
       <name><%= author.name[content.language.toString()] %></name>

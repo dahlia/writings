@@ -1,3 +1,4 @@
+@import url(https://use.typekit.net/xri2bkj.css);
 @import url(https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@100;300;700;900&display=swap);
 @import url(https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;500&display=swap);
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@100;300;700;900&display=swap');
@@ -15,6 +16,7 @@
 }
 
 @mixin horizontal {
+  :root:lang(en) &,
   :root:lang(ko-Kore).horizontal &,
   :root:lang(ko-Hang) &,
   :root:lang(ja).horizontal &,
@@ -57,6 +59,9 @@ body {
     -webkit-font-feature-settings: "chws" 1, "halt";
   }
 
+  font-family: 'Source Serif Pro', 'source-serif-pro', 'Lucida Bright',
+               'Times New Roman', Times, serif;
+  &:lang(en) { font-weight: 400; }
   &:lang(ko) { font-family: 'Noto Serif CJK KR', 'Noto Serif KR', serif; }
   &:lang(ja) { font-family: 'Noto Serif CJK JP', 'Noto Serif JP', serif; }
   &:lang(zh) { font-family: 'Noto Serif TC', 'Noto Serif TC', serif; }
@@ -156,19 +161,23 @@ body > nav.articles {
   }
 }
 
+body > header > h1, body > footer > nav > .site {
+  &:lang(en) { font-weight: 600; }
+}
+
 footer > nav > .site {
   position: absolute;
 
   @include vertical {
-    bottom: 3.5rem;
+    bottom: 4rem;
     right: 2.5rem;
     width: fit-content;
   }
 
   @include horizontal {
     top: 2.5rem;
-    right: 2.5rem;
-    max-width: 10rem;
+    right: 2rem;
+    max-width: 15rem;
   }
 
   font-size: large;
@@ -226,6 +235,8 @@ footer > nav > .site {
 footer > nav > .languages {
   font-size: x-small;
 
+  a:lang(en) { font-weight: 400; }
+
   @include vertical {
     a { margin-bottom: 1rem; }
   }
@@ -261,10 +272,17 @@ footer > nav > .languages, header > nav.languages {
   }
 
   a {
-    font-family: 'Noto Sans CJK KR', 'Noto Sans KR', sans-serif;
+    font-family: 'Source Sans Pro', 'Noto Sans', sans-serif;
+    &:lang(ko) { font-family: 'Noto Sans CJK KR', 'Noto Sans KR', sans-serif; }
+    &:lang(ja) { font-family: 'Noto Sans CJK JP', 'Noto Sans JP', sans-serif; }
+    &:lang(zh) { font-family: 'Noto Sans CJK TC', 'Noto Sans TC', sans-serif; }
     font-weight: 100;
     background: none;
     opacity: 0.75;
+
+    @include horizontal {
+      margin-right: 0.25rem;
+    }
 
     &:hover {
       border-radius: 0;

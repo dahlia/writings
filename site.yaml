@@ -1,9 +1,14 @@
-title: 洪民憙雜記
+titles:
+  en: Hong Minhee on Things
+  ko-Hang-KR: 洪民憙雜記
+  ko-Kore: 洪民憙雜記
 languageNames:
+  en: English
   ko-Hang-KR: 한국어 (한글)
   ko-Kore: 朝鮮語 (國漢文)
 authors:
 - name:
+    en: Hong Minhee
     ko-Hang-KR: 홍민희
     ko-Kore: 洪民憙
   uri: https://hongminhee.org/

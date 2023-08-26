@@ -2,7 +2,7 @@
   "$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
   "imports": {
     "std/": "https://deno.land/std@0.190.0/",
-    "jikji/": "https://raw.githubusercontent.com/dahlia/jikji/c53a5f64f318aa973619c48b07d3727de6d64a47/"
+    "jikji/": "https://raw.githubusercontent.com/dahlia/jikji/74c1ea43c4cc0464c485b59b7e9cef44a183c4fd/"
   },
   "lint": {
     "exclude": ["public_html", "static"]
