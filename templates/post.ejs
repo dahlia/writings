@@ -13,7 +13,26 @@
     <link rel="stylesheet" href="<%= baseUrl %>/static/style.css">
     <% for (const [key, url] of multiViews) if (key == null) { %>
       <link rel="canonical" href="<%= url.href %>">
+      <meta property="og:url" content="<%= url.href %>">
     <% } %>
+    <meta property="og:title" content="<%= title %>">
+    <meta
+      property="og:site_name"
+      content="<%= site.titles[content.language.toString()] %>">
+    <meta
+      property="og:locale"
+      content="<%= content.language.toString().replaceAll('-', '_') %>">
+    <% for (const [key, url] of multiViews) { %>
+      <% if (key != null && key.language != content.language) { %>
+        <meta
+          property="og:locale:alternate"
+          content="<%= key.language.toString().replaceAll('-', '_') %>">
+      <% } %>
+    <% } %>
+    <meta property="og:type" content="article">
+    <meta
+      property="og:article:published_time"
+      content="<%= published.toISOString() %>">
     <%- site.head ?? '' %>
   </head>
   <body>

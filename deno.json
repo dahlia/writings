@@ -12,9 +12,8 @@
   },
   "lock": "lock.json",
   "tasks": {
-    "build": "deno run --allow-read --allow-write=.bin,public_html,\"$(deno task tmpdir)\" --allow-env=SEONBI_API,TMPDIR,TMP,TEMP --allow-run --allow-net=deno.land,cdn.skypack.dev,github.com,objects.githubusercontent.com,127.0.0.1 main.ts",
+    "build": "deno run --allow-read --allow-write --allow-env=SEONBI_API,TMPDIR,TMP,TEMP --allow-run --allow-net=deno.land,cdn.skypack.dev,github.com,objects.githubusercontent.com,127.0.0.1 main.ts",
     "cache": "deno cache --lock-write main.ts",
-    "serve": "deno task build --watch --serve",
-    "tmpdir": "deno run --allow-env=TMPDIR,TMP,TEMP,SYSTEMROOT tmpdir.ts"
+    "serve": "deno task build --watch --serve"
   }
 }
