@@ -162,6 +162,8 @@ body > nav.articles {
 }
 
 body > header > h1, body > footer > nav > .site {
+  white-space: nowrap;
+
   &:lang(en) { font-weight: 600; }
 }
 
@@ -268,7 +270,7 @@ footer > nav > .languages, header > nav.languages {
 
   @include vertical {
     right: 3rem;
-    max-height: 15rem;
+    max-height: 20rem;
   }
 
   a {
