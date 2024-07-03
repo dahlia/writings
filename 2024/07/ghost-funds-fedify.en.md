@@ -46,7 +46,7 @@ the Ghost team, I got the confidence to contact them.
 
 I was surprised to find out that the Ghost team was [reviewing Fedify
 in a positive way][2], and they told me that they had indeed [decided to go
-ahead with Fedify]. It was a surprise, and I was thrilled!
+ahead with Fedify][3]. It was a surprise, and I was thrilled!
 
 [1]: https://activitypub.ghost.org/
 [2]: https://activitypub.ghost.org/day4/
