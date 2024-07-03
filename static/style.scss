@@ -351,6 +351,11 @@ em {
   //text-emphasis: dot;
 }
 
+dfn:lang(ko), dfn:lang(ja), dfn:lang(zh) {
+  font-style: normal;
+  font-weight: bold;
+}
+
 q {
   @include vertical {
     &:before {
