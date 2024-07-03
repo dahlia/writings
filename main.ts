@@ -184,7 +184,7 @@ try {
 }
 const seonbi = new Seonbi(seonbiConfig);
 await seonbi.start();
-window.onunload = () => seonbi.stop();
+globalThis.onunload = () => seonbi.stop();
 
 // Seonbi presets:
 const koKoreVPreset: Options = {
