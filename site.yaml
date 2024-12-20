@@ -2,18 +2,21 @@ titles:
   en: Hong Minhee on Things
   ko-Hang-KR: 洪民憙雜記
   ko-Kore: 洪民憙雜記
+  ja: 洪民憙雑記
 languageNames:
   en: English
   ko-Hang-KR: 한국어 (한글)
   ko-Kore: 朝鮮語 (國漢文)
+  ja: 日本語
 authors:
 - name:
     en: Hong Minhee
     ko-Hang-KR: 홍민희
     ko-Kore: 洪民憙
+    ja: 洪民憙
   uri: https://hongminhee.org/
 head: |
-  <meta name="fediverse:creator" content="@hongminhee@fosstodon.org">
+  <meta name="fediverse:creator" content="@hongminhee@hollo.social">
   <script defer
           data-domain="writings.hongminhee.org"
           src="https://plausible.io/js/plausible.js"></script>

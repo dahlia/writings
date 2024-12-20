@@ -228,15 +228,17 @@ const koKoreHPreset: Options = {
 
 // Functions to format a year in various languages:
 const yearFormatters: Record<string, ((y: number) => string)> = {
-  "en": (y: number) => y.toString(),
+  en: (y: number) => y.toString(),
   "ko-Kore": (y: number) =>
     `${y.toLocaleString("zh-Hant-CN-u-nu-hanidec", { useGrouping: false })}年`,
   "ko-Hang-KR": (y: number) => `${y}년`,
+  ja: (y: number) =>
+    `${y.toLocaleString("zh-Hant-CN-u-nu-hanidec", { useGrouping: false })}年`,
 };
 
 // Functions to format a month-date in various languages:
 const monthDateFormatters: Record<string, ((d: Date) => string)> = {
-  "en": (d: Date) =>
+  en: (d: Date) =>
     d.toLocaleDateString("en-US", { month: "long", day: "numeric" }),
   "ko-Kore": (d: Date) =>
     `${
@@ -249,12 +251,26 @@ const monthDateFormatters: Record<string, ((d: Date) => string)> = {
       })
     }日`,
   "ko-Hang-KR": (d: Date) => `${d.getMonth() + 1}월 ${d.getDate()}일`,
+  ja: (d: Date) =>
+    `${
+      (d.getMonth() + 1).toLocaleString("zh-Hant-CN-u-nu-hanidec", {
+        useGrouping: false,
+      })
+    }月${
+      d.getDate().toLocaleString("zh-Hant-CN-u-nu-hanidec", {
+        useGrouping: false,
+      })
+    }日`,
 };
 
 // Functions to format a full date in various languages:
 const dateFormatters: Record<string, ((d: Date) => string)> = {
   "ko-Kore": (d: Date) =>
     `${yearFormatters["ko-Kore"](d.getFullYear())} ${
+      monthDateFormatters["ko-Kore"](d)
+    }`,
+  ja: (d: Date) =>
+    `${yearFormatters["ko-Kore"](d.getFullYear())}${
       monthDateFormatters["ko-Kore"](d)
     }`,
 };
