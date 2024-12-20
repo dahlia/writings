@@ -3,18 +3,18 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
     - uses: denoland/setup-deno@v1
       with:
-        deno-version: v1.x
+        deno-version: v2.x
     - id: setup-seonbi
       uses: dahlia/seonbi/setup@5467d6ccb54de4927c58fa62bf7b6ff0ef05ed84
       with:
-        seonbi-version: 0.3.*
+        seonbi-version: 0.4.*
         add-to-path: false
     - run: sudo apt-get install -y git-restore-mtime
     - run: git restore-mtime
@@ -34,7 +34,7 @@ jobs:
         TMPDIR: ${{ runner.temp }}
         BASE_URL: ${{ secrets.BASE_URL }}
         EXTRA_ARGS: ${{ secrets.EXTRA_ARGS }}
-    - uses: sand4rt/ftp-deployer@v1.3
+    - uses: sand4rt/ftp-deployer@v1.8
       with:
         sftp: true
         port: 22
@@ -51,7 +51,7 @@ jobs:
         AWS_REGION: ${{ secrets.AWS_REGION }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: public_html
         path: public_html/

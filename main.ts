@@ -14,9 +14,9 @@ import {
   scanFiles,
   setupConsoleLog,
   when,
-  writeFiles,
 } from "@hongminhee/jikji";
 import { renderListTemplate, renderTemplate } from "@hongminhee/jikji/ejs";
+import { writeFiles, type WriteFilesOptions } from "@hongminhee/jikji/file";
 import {
   abbr,
   attrs,
@@ -28,6 +28,7 @@ import {
   MarkdownIt,
   title,
 } from "@hongminhee/jikji/markdown";
+import { defaultMime } from "@hongminhee/jikji/mime";
 import {
   htmlRedirector,
   intoMultiView,
@@ -542,14 +543,22 @@ if (args.remove) {
 
 // Generates the static site files:
 async function build(): Promise<void> {
+  defaultMime.define({ "application/php": ["php"] }, true);
+  const writeOptions: WriteFilesOptions = {
+    mime: defaultMime,
+  };
   if (args.watch) {
     // Writes the files to the output directory (public_html/) and watches
     // the input files for changes (^C to stop):
     info(`Watching ${outDir} for changes...`);
-    await pipeline.forEachWithReloading(writeFiles(outDir, baseUrl));
+    await pipeline.forEachWithReloading(
+      writeFiles(outDir, baseUrl, writeOptions),
+    );
   } else {
     // Writes the files to the output directory (public_html/):
-    await pipeline.forEach(writeFiles(outDir, baseUrl));
+    await pipeline.forEach(
+      writeFiles(outDir, baseUrl, writeOptions),
+    );
   }
 }
 
