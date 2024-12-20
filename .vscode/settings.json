@@ -1,8 +1,19 @@
 {
+  "cSpell.enabled": false,
   "deno.enable": true,
   "deno.lint": true,
-  "deno.unstable": false,
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "denoland.vscode-deno",
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno",
+    "editor.codeActionsOnSave": {
+      "source.sortImports": "always"
+    }
+  },
   "yaml.schemaStore.enable": false
 }

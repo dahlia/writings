@@ -1,3 +1,5 @@
+@use "sass:string";
+
 @import url(https://use.typekit.net/xri2bkj.css);
 @import url(https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@100;300;700;900&display=swap);
 @import url(https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;500&display=swap);
@@ -79,7 +81,7 @@ body {
 @media (min-height: 50rem) {
   body {
     @include vertical {
-      max-height: unquote('min(45rem, 100% - 18rem)');
+      max-height: string.unquote('min(45rem, 100% - 18rem)');
       font-size: larger;
     }
 
@@ -109,7 +111,7 @@ body {
 @media (min-width: 50rem) {
   body {
     @include horizontal {
-      max-width: unquote('min(45rem, 100% - 18rem)');
+      max-width: string.unquote('min(45rem, 100% - 18rem)');
       font-size: larger;
     }
 

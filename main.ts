@@ -1,28 +1,3 @@
-import * as YAML from "std/yaml/mod.ts";
-import { parse } from "std/flags/mod.ts";
-import { Handler, serve } from "std/http/mod.ts";
-import { serveDir } from "std/http/file_server.ts";
-import { info } from "std/log/mod.ts";
-import { join } from "std/path/mod.ts";
-import {
-  Configuration as SeonbiConfiguration,
-  DEFAULT_CONFIGURATION,
-  Options,
-  Seonbi,
-} from "https://deno.land/x/seonbi@0.3.6/mod.ts";
-import { toArray } from "https://deno.land/x/aitertools@0.4.0/collections.ts";
-import { renderListTemplate, renderTemplate } from "jikji/ejs.ts";
-import {
-  abbr,
-  attrs,
-  bracketedSpans,
-  deflist,
-  footnote,
-  frontMatter,
-  markdown,
-  MarkdownIt,
-  title,
-} from "jikji/markdown.ts";
 import {
   anyRepresentations,
   Content,
@@ -40,17 +15,40 @@ import {
   setupConsoleLog,
   when,
   writeFiles,
-} from "jikji/mod.ts";
-import { detectLanguage } from "jikji/path.ts";
+} from "@hongminhee/jikji";
+import { renderListTemplate, renderTemplate } from "@hongminhee/jikji/ejs";
+import {
+  abbr,
+  attrs,
+  bracketedSpans,
+  deflist,
+  footnote,
+  frontMatter,
+  markdown,
+  MarkdownIt,
+  title,
+} from "@hongminhee/jikji/markdown";
 import {
   htmlRedirector,
   intoMultiView,
   phpNegotiator,
-} from "jikji/multiview.ts";
-import sass from "jikji/sass.ts";
+} from "@hongminhee/jikji/multiview";
+import { detectLanguage } from "@hongminhee/jikji/path";
+import sass from "@hongminhee/jikji/sass";
+import { parseArgs } from "@std/cli/parse-args";
+import { serveDir } from "@std/http/file-server";
+import { info } from "@std/log";
+import { join } from "@std/path";
+import * as YAML from "@std/yaml";
+import {
+  Configuration as SeonbiConfiguration,
+  DEFAULT_CONFIGURATION,
+  Options,
+  Seonbi,
+} from "seonbi";
 
 // Takes CLI arguments & options:
-const args = parse(Deno.args, {
+const args = parseArgs(Deno.args, {
   boolean: ["help", "verbose", "remove", "watch", "serve", "php"],
   string: ["base-url", "out-dir", "host", "port"],
   default: {
@@ -167,7 +165,7 @@ function getMarkdownIt(): typeof MarkdownIt {
 }
 
 // Seonbi:
-const seonbiConfig: SeonbiConfiguration = {
+let seonbiConfig: SeonbiConfiguration = {
   ...DEFAULT_CONFIGURATION,
   process: {
     downloadPath: Deno.build.os === "windows"
@@ -178,7 +176,9 @@ const seonbiConfig: SeonbiConfiguration = {
 };
 try {
   const seonbiPath = Deno.env.get("SEONBI_API");
-  if (seonbiPath != null) seonbiConfig.process = { binPath: seonbiPath };
+  if (seonbiPath != null) {
+    seonbiConfig = { ...seonbiConfig, process: { binPath: seonbiPath } };
+  }
 } catch (e) {
   if (!(e instanceof Deno.errors.PermissionDenied)) throw e;
 }
@@ -471,9 +471,11 @@ const pipeline = scanFiles(["2*/**/*.md", "static/**/*"], { root: srcDir })
         async () => [
           "",
           {
-            posts: (await toArray(pipeline)).sort(compareResourcesByPath)
+            posts: (await Array.fromAsync(pipeline)).sort(
+              compareResourcesByPath,
+            )
               .reverse(),
-            feeds: (await toArray(feeds)),
+            feeds: (await Array.fromAsync(feeds)),
             formatYear: yearFormatters[language.toString()],
             formatMonthDate: monthDateFormatters[language.toString()],
           },
@@ -482,7 +484,9 @@ const pipeline = scanFiles(["2*/**/*.md", "static/**/*"], { root: srcDir })
         language,
         await pipeline.getLastModified(),
         undefined,
-        (await toArray(pipeline)).map((r) => r.path.toString()).join("\n"),
+        (await Array.fromAsync(pipeline)).map((r) => r.path.toString()).join(
+          "\n",
+        ),
       );
     });
     yield new Resource(baseUrl, await Promise.all(lists));
@@ -535,11 +539,10 @@ async function build(): Promise<void> {
 
 // Runs an HTTP server:
 async function runServer(): Promise<void> {
-  const server: Handler = (req) => serveDir(req, { fsRoot: outDir });
-  await serve(server, {
+  await Deno.serve({
     port: parseInt(args.port.toString()),
     hostname: args.host,
-  });
+  }, (req) => serveDir(req, { fsRoot: outDir }));
 }
 
 await Promise.all(args.serve ? [build(), runServer()] : [build()]);

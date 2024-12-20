@@ -1,19 +1,32 @@
 {
-  "$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
   "imports": {
-    "std/": "https://deno.land/std@0.190.0/",
-    "jikji/": "https://raw.githubusercontent.com/dahlia/jikji/74c1ea43c4cc0464c485b59b7e9cef44a183c4fd/"
+    "@hongminhee/jikji": "jsr:@hongminhee/jikji@^0.4.0",
+    "@std/cli": "jsr:@std/cli@^1.0.9",
+    "@std/http": "jsr:@std/http@^1.0.12",
+    "@std/log": "jsr:@std/log@^0.224.12",
+    "@std/path": "jsr:@std/path@^1.0.8",
+    "@std/yaml": "jsr:@std/yaml@^1.0.5",
+    "seonbi": "https://deno.land/x/seonbi@0.4.0/mod.ts"
   },
   "lint": {
-    "exclude": ["public_html", "static"]
+    "exclude": [
+      "public_html",
+      "static"
+    ]
   },
   "fmt": {
-    "include": ["main.ts", "tmpdir.ts"]
+    "include": [
+      "main.ts",
+      "tmpdir.ts"
+    ],
+    "exclude": [
+      "static/style.scss"
+    ]
   },
   "lock": "lock.json",
   "tasks": {
-    "build": "deno run --allow-read --allow-write --allow-env=SEONBI_API,TMPDIR,TMP,TEMP --allow-run --allow-net=deno.land,cdn.skypack.dev,github.com,objects.githubusercontent.com,127.0.0.1 main.ts",
-    "cache": "deno cache --lock-write main.ts",
+    "build": "deno run --allow-read --allow-write --allow-env=SASS_PATH,SEONBI_API,TMPDIR,TMP,TEMP --allow-run --allow-net=deno.land,cdn.skypack.dev,github.com,objects.githubusercontent.com,127.0.0.1 main.ts",
+    "cache": "deno cache main.ts",
     "serve": "deno task build --watch --serve"
   }
 }
