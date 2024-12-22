@@ -34,7 +34,8 @@ jobs:
         TMPDIR: ${{ runner.temp }}
         BASE_URL: ${{ secrets.BASE_URL }}
         EXTRA_ARGS: ${{ secrets.EXTRA_ARGS }}
-    - uses: datanomi/SFTP-Push@v1.2.1
+    - if: github.ref == 'refs/heads/main'
+      uses: datanomi/SFTP-Push@v1.2.1
       with:
         username: ${{ secrets.SFTP_USER }}
         server: ${{ secrets.SFTP_SERVER }}
@@ -42,7 +43,8 @@ jobs:
         ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
         local_path: ./public_html/*
         remote_path: ${{ secrets.SFTP_REMOTE_PATH }}
-    - uses: chetan/invalidate-cloudfront-action@v2
+    - if: github.ref == 'refs/heads/main'
+      uses: chetan/invalidate-cloudfront-action@v2
       env:
         DISTRIBUTION: ${{ secrets.DISTRIBUTION }}
         PATHS: "/*"
