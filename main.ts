@@ -271,9 +271,7 @@ const dateFormatters: Record<string, ((d: Date) => string)> = {
       monthDateFormatters["ko-Kore"](d)
     }`,
   ja: (d: Date) =>
-    `${yearFormatters["ko-Kore"](d.getFullYear())}${
-      monthDateFormatters["ko-Kore"](d)
-    }`,
+    `${yearFormatters.ja(d.getFullYear())}${monthDateFormatters.ja(d)}`,
 };
 
 // Extends a custom dictionary to the given Seonbi options:
