@@ -6,7 +6,7 @@
     "@std/log": "jsr:@std/log@^0.224.12",
     "@std/path": "jsr:@std/path@^1.0.8",
     "@std/yaml": "jsr:@std/yaml@^1.0.5",
-    "seonbi": "https://deno.land/x/seonbi@0.4.0/mod.ts"
+    "seonbi": "https://deno.land/x/seonbi@0.5.0/mod.ts"
   },
   "lint": {
     "exclude": [

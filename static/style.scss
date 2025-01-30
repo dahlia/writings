@@ -8,6 +8,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@100;300;700;900&display=swap');
 @import url(https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;500&display=swap);
 
+@font-face {
+  font-family: 'Noto Serif Full-Width Question Mark';
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/notoserifjp/v30/xn7mYHs72GKoTvER4Gn3b5eMXNvMckQlPa61uNKcCqOfbtLXoH3502Rk.116.woff2) format('woff2');
+  unicode-range: U+ff1f;
+}
+@font-face {
+  font-family: 'Noto Serif Full-Width Exclamation Mark';
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/notoserifjp/v30/xn7mYHs72GKoTvER4Gn3b5eMXNvMckQlPa61uNKcCqOfbtLXoH3502Rk.117.woff2) format('woff2');
+  unicode-range: U+ff01;
+}
+
 @mixin vertical {
   :root:lang(ko-Kore):not(.horizontal) &,
   :root:lang(ja):not(.horizontal) &,
@@ -64,9 +77,13 @@ body {
   font-family: 'Source Serif Pro', 'source-serif-pro', 'Lucida Bright',
                'Times New Roman', Times, serif;
   &:lang(en) { font-weight: 400; }
-  &:lang(ko) { font-family: 'Noto Serif CJK KR', 'Noto Serif KR', serif; }
+  &:lang(ko) {
+    font-family: 'Noto Serif Full-Width Question Mark',
+                 'Noto Serif Full-Width Exclamation Mark',
+                 'Noto Serif CJK KR', 'Noto Serif KR', serif;
+  }
   &:lang(ja) { font-family: 'Noto Serif CJK JP', 'Noto Serif JP', serif; }
-  &:lang(zh) { font-family: 'Noto Serif TC', 'Noto Serif TC', serif; }
+  &:lang(zh) { font-family: 'Noto Serif CJK TC', 'Noto Serif TC', serif; }
 
   font-variant-east-asian: proportional-width;
   line-height: 1.6;

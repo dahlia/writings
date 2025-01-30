@@ -12,9 +12,9 @@ jobs:
       with:
         deno-version: v2.x
     - id: setup-seonbi
-      uses: dahlia/seonbi/setup@5467d6ccb54de4927c58fa62bf7b6ff0ef05ed84
+      uses: dahlia/seonbi/setup@0.5.0
       with:
-        seonbi-version: 0.4.*
+        seonbi-version: 0.5.*
         add-to-path: false
     - run: sudo apt-get install -y git-restore-mtime
     - run: git restore-mtime
