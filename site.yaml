@@ -16,7 +16,7 @@ authors:
     ja: 洪民憙
   uri: https://hongminhee.org/
 head: |
-  <meta name="fediverse:creator" content="@hongminhee@hollo.social">
+  <meta name="fediverse:creator" content="hongminhee@hollo.social">
   <script defer
           data-domain="writings.hongminhee.org"
           src="https://plausible.io/js/plausible.js"></script>
