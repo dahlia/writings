@@ -18,7 +18,7 @@ jobs:
         add-to-path: false
     - run: sudo apt-get install -y git-restore-mtime
     - run: git restore-mtime
-    - uses: actions/cache@v2
+    - uses: actions/cache@v4
       with:
         key: deno
         path: |
