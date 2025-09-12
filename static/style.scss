@@ -426,6 +426,12 @@ hr {
   }
 }
 
+ol > li {
+  @include vertical {
+    list-style-type: cjk-decimal;
+  }
+}
+
 sup.footnote-ref > a {
   border: none;
   padding: 0;
@@ -452,6 +458,8 @@ sup.footnote-ref > a {
 
   counter-reset: footnote-counter;
   > li {
+    list-style-type: none !important;
+
     &:before {
       counter-increment: footnote-counter;
       content: counter(footnote-counter);
