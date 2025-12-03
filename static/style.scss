@@ -156,17 +156,18 @@ body > article {
   @include horizontal { padding-top: 3rem; }
 
   & > time:first-of-type {
-    float: right;
     opacity: 0.5;
     font-size: smaller;
   }
 
   & > h1:first-of-type {
     @include vertical {
+      margin-right: 0;
       margin-left: 1.5rem;
     }
 
     @include horizontal {
+      margin-top: 0;
       margin-bottom: 1.5rem;
     }
   }
