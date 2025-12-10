@@ -96,7 +96,7 @@ Hackers’ Pubにいらっしゃる多くの方々に愛され、<q>パブにゃ
 『[Software Sessions]』インターネットラジオに出演し、ActivityPubと
 Fedifyについて話すことができた——「[Hong Minhee on ActivityPub]」。
 ただし英語で進行されたため、かなり緊張してしどろもどろになってしまったことが後悔として残る。
-英会話をもっと練習しなければという思いもした︵しかしいつもそうであるように、思うだけで実行には移せなかった…︶。
+英会話をもっと練習しなければという思いもした。︵しかしいつもそうであるように、思うだけで実行には移せなかった…︶
 
 [Jeremy Jung]: https://bsky.app/profile/jeremyjung.com
 [Software Sessions]: https://www.softwaresessions.com/
