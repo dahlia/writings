@@ -26,6 +26,14 @@
           content="<%= key.language.toString().replaceAll('-', '_') %>">
       <% } %>
     <% } %>
+    <% const siteDescription = site.descriptions?.[content.language.toString()]
+        ?? site.titles[content.language.toString()] %>
+    <meta property="og:description" content="<%- siteDescription %>">
+    <meta name="twitter:card" content="summary">
+    <meta
+      name="twitter:title"
+      content="<%- site.titles[content.language.toString()] %>">
+    <meta name="twitter:description" content="<%- siteDescription %>">
     <% for (const feed of metadata.feeds) { %>
       <% for (const alternate of feed) { %>
         <link

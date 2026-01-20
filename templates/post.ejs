@@ -33,6 +33,11 @@
     <meta
       property="og:article:published_time"
       content="<%= published.toISOString() %>">
+    <% const description = metadata?.description ?? extractDescription(body) %>
+    <meta property="og:description" content="<%- description %>">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="<%- title %>">
+    <meta name="twitter:description" content="<%- description %>">
     <%- site.head ?? '' %>
   </head>
   <body>

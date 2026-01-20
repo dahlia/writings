@@ -264,6 +264,31 @@ const monthDateFormatters: Record<string, ((d: Date) => string)> = {
     }日`,
 };
 
+// Extracts plain text from HTML and returns the first N characters:
+function extractDescription(html: string, maxLength: number = 160): string {
+  // Remove the first H1 (title) to avoid duplication
+  const withoutTitle = html.replace(/<h1[^>]*>[\s\S]*?<\/h1>/i, "");
+  // Remove HTML tags
+  const text = withoutTitle
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (text.length <= maxLength) return text;
+  // Cut at word boundary
+  const truncated = text.substring(0, maxLength);
+  const lastSpace = truncated.lastIndexOf(" ");
+  return (lastSpace > maxLength * 0.8 ? truncated.substring(0, lastSpace) : truncated) + "…";
+}
+
 // Functions to format a full date in various languages:
 const dateFormatters: Record<string, ((d: Date) => string)> = {
   "ko-Kore": (d: Date) =>
@@ -305,21 +330,6 @@ async function withDictionary(
       },
     },
   };
-}
-
-// To order resources by their paths, in particular, to order posts by their
-// published dates (e.g., /2022/1/foo.ko-Kore.md should be followed by
-// /2022/12/bar.ko-Kore.md), the following function compare two paths by
-// their components:
-function compareResourcesByPath(a: Resource, b: Resource) {
-  const aPath = a.path.href.split("/");
-  const bPath = b.path.href.split("/");
-  const commonLength = Math.min(aPath.length, bPath.length);
-  for (let i = 0; i < commonLength; i++) {
-    if (aPath[i] < bPath[i]) return -1;
-    if (aPath[i] > bPath[i]) return 1;
-  }
-  return aPath.length < bPath.length ? -1 : 1;
 }
 
 // The divider that turn multi-language contents into distinct files, and
@@ -522,7 +532,12 @@ const pipeline = scanFiles(["2*/**/*.md", "static/**/*"], { root: srcDir })
   )
   // Renders the whole page for posts using the EJS template:
   .transform(
-    renderTemplate("templates/post.ejs", { baseUrl, site, dateFormatters }),
+    renderTemplate("templates/post.ejs", {
+      baseUrl,
+      site,
+      dateFormatters,
+      extractDescription,
+    }),
     (c: Content) => c.matches({ exactType: "text/html" }) && c.language != null,
   )
   // Renders the list pages using the EJS template:
