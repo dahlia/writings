@@ -486,10 +486,18 @@ const pipeline = scanFiles(["2*/**/*.md", "static/**/*"], { root: srcDir })
         async () => [
           "",
           {
-            posts: (await Array.fromAsync(pipeline)).sort(
-              compareResourcesByPath,
-            )
-              .reverse(),
+            posts: await (async () => {
+              const posts = await Array.fromAsync(pipeline);
+              const dates = await Promise.all(
+                posts.map((post) => queryPublished(post)),
+              );
+              return posts
+                .map((post, i) => ({ post, date: dates[i] }))
+                .sort((a, b) =>
+                  (b.date?.getTime() ?? 0) - (a.date?.getTime() ?? 0)
+                )
+                .map(({ post }) => post);
+            })(),
             feeds: (await Array.fromAsync(feeds)),
             formatYear: yearFormatters[language.toString()],
             formatMonthDate: monthDateFormatters[language.toString()],
