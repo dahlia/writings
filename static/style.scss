@@ -367,8 +367,17 @@ article, article * {
 }
 
 em {
-  font-style: normal;
-  //text-emphasis: dot;
+  &:lang(ko), &:lang(ja), &:lang(zh) {
+    font-style: normal;
+    //text-emphasis: dot;
+  }
+}
+
+strong {
+  font-weight: bold;
+  &:lang(ko) { font-family: 'Noto Sans CJK KR', 'Noto Sans KR', sans-serif; }
+  &:lang(ja) { font-family: 'Noto Sans CJK JP', 'Noto Sans JP', sans-serif; }
+  &:lang(zh) { font-family: 'Noto Sans CJK TC', 'Noto Sans TC', sans-serif; }
 }
 
 dfn:lang(ko), dfn:lang(ja), dfn:lang(zh) {
@@ -391,6 +400,38 @@ q {
 cite {
   &:lang(ko), &:lang(ja), &:lang(zh) {
     font-style: normal;
+  }
+  &:lang(ko), &:lang(zh) {
+    &::before {
+      content: '〈';
+    }
+    &::after {
+      content: '〉';
+    }
+    &.series {
+      &::before {
+        content: '《';
+      }
+      &::after {
+        content: '》';
+      }
+    }
+  }
+  &:lang(ja) {
+    &::before {
+      content: '「';
+    }
+    &::after {
+      content: '」';
+    }
+    &.series {
+      &::before {
+        content: '『';
+      }
+      &::after {
+        content: '』';
+      }
+    }
   }
 }
 

@@ -193,13 +193,13 @@ Hollo는 豫想外로 日本에서 使用者層이 생겨서, 公式 文書를 �
 
 아무튼, 부스를 내기로 했으니 뭐라도 展示品이 必要했는데,
 그 一環으로 Fedify의 튜토리얼인
-〈[나만의 聯合宇宙 마이크로블로그 만들기]〉([Creating your own federated microblog])의
-日本語板인 <span lang="ja">〈[自分だけのフェディバースのマイクロブログを作ろう！]〉</span>을
+<cite>[나만의 聯合宇宙 마이크로블로그 만들기]</cite>([Creating your own federated microblog])의
+日本語板인 <cite lang="ja">[自分だけのフェディバースのマイクロブログを作ろう！]</cite>을
 종이 冊으로 印刷하여 팔기로 했다. 多幸스럽게도 만들어 가져 간 冊은 大部分 팔려서
 돌아올 때는 꽤 가볍게 올 수 있었다. 이 때 冊을 사 가신 분들 中 한 분인
 [모나코 廣告][](<span lang="ja">モナコ広告</span>) 님께서 튜토리얼을 따라해 본
 過程을 <span lang="ja">[FediLUG] 勉強会</span>라는 모임에서
-〈[Fedify로 ActivityPub 서버를 만들어 봤다]〉(<span
+<cite>[Fedify로 ActivityPub 서버를 만들어 봤다]</cite>(<span
 lang="ja">FedifyでActivityPubサーバを作ってみた</span>)라는
 題目으로 發表하시기도 했다.
 

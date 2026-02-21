@@ -15,7 +15,7 @@ reads:
 聯合宇宙와 함께 한 二〇二五年
 =============================
 
-昨年에도 〈[聯合宇宙와 함께 한 一年]〉이라는 題目의 글을 썼는데,
+昨年에도 <cite>[聯合宇宙와 함께 한 一年]</cite>이라는 題目의 글을 썼는데,
 올해도 비슷한 主題로 글을 또 쓰게 되었다.
 아무래도 專業으로 聯合宇宙[^1]와 關聯된 오픈 소스 소프트웨어를 開發하게 되었다 보니,
 이 일을 하는 동안에는 每年 이런 글을 쓰게 될 것 같다는 생각도 든다.
@@ -30,12 +30,12 @@ reads:
 *[W3C]: World Wide Web Consortium
 
 
-《Thinking Penguin Magazine Vol.0》
------------------------------------
+<cite class="series">Thinking Penguin Magazine Vol.0</site>
+-----------------------------------------------------------
 
 日本의 聯合宇宙 開發者 모임인 [FediLUG]에서 처음으로 펴낸 同人 雜誌인
-《[Thinking Penguin Magazine Vol.0]》에 微力하나마 寄稿를 하게 되었다.
-내가 쓴 原稿는 〈國漢文混用體에서 Hollo까지〉(<cite
+<cite class="series">[Thinking Penguin Magazine Vol.0]</cite>에 微力하나마 寄稿를 하게 되었다.
+내가 쓴 原稿는 <cite>國漢文混用體에서 Hollo까지</cite>(<cite
 lang="ja">国漢文混用体からHolloまで</cite>)라는 記事로, 내가 어떻게 해서
 [Fedify][][^2]와 [Hollo][][^3]를 만들게 되었는지를 다뤘다. 이 雜誌는 第十一回
 [技術書同人誌博覽會]에도 出品되었다고 하는데, 나는 餘裕가 없어서 直接 觀覽은
@@ -97,12 +97,12 @@ Hackers’ Pub에 계신 많은 분들께 사랑 받고 <q>펍냥이</q>라는 �
 [Hackers’ Pub의 비주얼 아이덴티티]: https://github.com/hackers-pub/visual-identity
 
 
-《소프트웨어 세션》 (Software Sessions) 出演
---------------------------------------------
+<cite class="series">소프트웨어 세션</cite> (Software Sessions) 出演
+--------------------------------------------------------------------
 
 올해 봄에는 좋은 機會로 [Jeremy Jung] 氏가 호스트하는
-《[소프트웨어 세션]》(Software Sessions) 인터넷 라디오에 出演하여 ActivityPub과
-Fedify에 關해 이야기할 수 있었다: 〈[洪民憙의 ActivityPub 이야기]〉(<cite
+<cite class="series">[소프트웨어 세션]</cite>(Software Sessions) 인터넷 라디오에 出演하여 ActivityPub과
+Fedify에 關해 이야기할 수 있었다: <cite>[洪民憙의 ActivityPub 이야기]</cite>(<cite
 lang="en">Hong Minhee on ActivityPub</cite>). 다만 英語로 進行된 탓에,
 크게 緊張하여 橫說竪說한 것이 後悔로 남는다. 英語 會話를 많이 鍊習해야겠다는
 생각도 했다. (하지만 언제나 그렇듯이 생각만 하고 實行에 옮기지는 못했다…)
@@ -112,12 +112,12 @@ lang="en">Hong Minhee on ActivityPub</cite>). 다만 英語로 進行된 탓에,
 [洪民憙의 ActivityPub 이야기]: https://www.softwaresessions.com/episodes/activitypub/
 
 
-《우리의 코드를 찾아서》 出演
------------------------------
+<cite class="series">우리의 코드를 찾아서</cite> 出演
+-----------------------------------------------------
 
 난생 처음으로 YouTube에도 出演하기도 했다. [朴賢宇] 님께서 運營하시는 [하루開發]
-채널의 《우리의 코드를 찾아서》 시리즈에
-〈[民憙 님과 Fedify & Hollo 알아보기]〉編으로 나오게 된 것이다. 어떻게 Fedify와
+채널의 <cite class="series">우리의 코드를 찾아서</cite> 시리즈에
+<cite>[民憙 님과 Fedify & Hollo 알아보기]</cite>編으로 나오게 된 것이다. 어떻게 Fedify와
 Hollo를 만들게 되었는지, 그 誕生 祕話를 便한 雰圍氣에서 풀어낼 수 있었다.
 
 [朴賢宇]: https://lqez.dev/
@@ -162,7 +162,7 @@ Fedify 投資 誘致
 就職하는 것까지 생각하던 次에 多幸스럽게도 志願했던 [STF]에 냈던 志願書가
 通過하게 되었다. 오히려 NLnet에서 받을 수 있는 投資金보다 훨씬 더 넉넉한
 金額을 投資 받을 수 있게 되었으니 轉禍爲福이 된 셈이다. 이에 關해서는
-〈[STF의 Fedify 投資]〉라는 글에서 仔細히 썼다.
+<cite>[STF의 Fedify 投資]</cite>라는 글에서 仔細히 썼다.
 
 何如間, 感謝하게도 앞으로 一年間 專業으로 Fedify 프로젝트에 集中할 수 있게
 되었다.
@@ -180,26 +180,26 @@ Fedify 投資 誘致
 올해는 여러 모임이나 컨퍼런스에서 發表를 할 機會가 많았다.
 
 올해 처음으로 한 發表는 四月 初에 開催된 第八回 FediLUG 勉強會[^5]에서 한 것인데,
-앞서 言及한 《Thinking Penguin Magazine Vol.0》에 寄稿한 記事
-〈[國漢文混用體에서 Hollo까지]〉(<cite lang="ja">国漢文混用体からHolloまで</cite>)와
+앞서 言及한 <cite class="series">Thinking Penguin Magazine Vol.0</cite>에 寄稿한 記事
+<cite>[國漢文混用體에서 Hollo까지]</cite>(<cite lang="ja">国漢文混用体からHolloまで</cite>)와
 같은 題目으로 發表했다. 內容은 記事와 大同小異하다. 日本에 갈 餘裕가 없어서
 發表 自體는 온라인으로 進行하였다.
 
 그 다음으로 한 發表도 日本에서 한 것으로, 八月 初 [OSC 2025 京都]에서 開催되었던
-《[聯合宇宙 만들기—開發者·管理者들의 現場에서]》(<span
-lang="ja">Fediverseのつくりかた 〜開発者・管理者たちの現場から〜</span>)
-세미나에서 〈[BotKit by Fedify: 누구나 쉽게 만들 수 있는 ActivityPub 봇]〉(<cite
+<cite class="series">[聯合宇宙 만들기—開發者·管理者들의 現場에서]</cite>(<span
+lang="ja" class="series">Fediverseのつくりかた 〜開発者・管理者たちの現場から〜</span>)
+세미나에서 <cite>[BotKit by Fedify: 누구나 쉽게 만들 수 있는 ActivityPub 봇]</cite>(<cite
 lang="ja">BotKit by Fedify：誰でも簡単に作れるActivityPubボット</cite>)이라는
 主題로 發表했다. 이 때도 京都까지 갈 餘裕가 없어서 온라인으로 參與했다.
 
 가을에는 올해 첫 開催인 韓國의 自有·오픈 소스 소프트웨어 컨퍼런스
-[FOSS for All 컨퍼런스 2025]에서〈[야크 셰이빙: 새로운 오픈 소스의 原動力]〉이라는
-主題로 基調演說을 하게 되었다. 이 發表는 日本에서 했던 發表인 〈國漢文混用體에서
-Hollo까지〉를 바탕으로 내가 만든 오픈 소스 프로젝트 中에 聯合宇宙와 關聯 없는
+[FOSS for All 컨퍼런스 2025]에서 <cite>[야크 셰이빙: 새로운 오픈 소스의 原動力]</cite>이라는
+主題로 基調演說을 하게 되었다. 이 發表는 日本에서 했던 發表인 <cite>國漢文混用體에서
+Hollo까지</cite>를 바탕으로 내가 만든 오픈 소스 프로젝트 中에 聯合宇宙와 關聯 없는
 것들까지 함께 다룬 것이다.
 
 겨울에는 函數型 프로그래밍 컨퍼런스인 [liftIO 2025]에서
-〈[Optique: TypeScript의 타입 推論으로 CLI 有效性 檢查를 代替하기]〉라는
+<cite>[Optique: TypeScript의 타입 推論으로 CLI 有效性 檢查를 代替하기]</cite>라는
 發表를 했다. 올해 내가 한 發表 中에서는 唯一하게 聯合宇宙와 關聯이 없는 發表였다.
 
 [^5]: 日本의 [FediLUG]에서 隔月로 開催하는 工夫 모임.
