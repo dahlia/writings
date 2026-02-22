@@ -7,7 +7,7 @@
       content="Jikji &lt;https://github.com/dahlia/jikji&gt;">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title><%= site.titles[content.language.toString()] %></title>
-    <link rel="stylesheet" href="<%= baseUrl %>/static/style.css">
+    <link rel="stylesheet" href="<%= baseUrl %>/static/style.css?v=<%= styleHash %>">
     <% for (const [key, url] of multiViews) if (key == null) { %>
       <link rel="canonical" href="<%= url.href %>">
       <meta property="og:url" content="<%= url.href %>">

@@ -137,6 +137,17 @@ const site = YAML.parse(
   await Deno.readTextFile(join(srcDir, "site.yaml")),
 ) as Record<string, unknown>;
 
+// Cache buster for static assets (hash of style.scss content):
+const styleHash = Array.from(
+  new Uint8Array(
+    await crypto.subtle.digest(
+      "SHA-256",
+      await Deno.readFile(join(srcDir, "static/style.scss")),
+    ),
+  ),
+  (b) => b.toString(16).padStart(2, "0"),
+).join("").slice(0, 8);
+
 // Set of languages:
 const languages = new Set<LanguageTag>(
   Object.keys(site.languageNames as Record<string, string>).map((k) =>
@@ -537,6 +548,7 @@ const pipeline = scanFiles(["2*/**/*.md", "static/**/*"], { root: srcDir })
       site,
       dateFormatters,
       extractDescription,
+      styleHash,
     }),
     (c: Content) => c.matches({ exactType: "text/html" }) && c.language != null,
   )
@@ -547,6 +559,7 @@ const pipeline = scanFiles(["2*/**/*.md", "static/**/*"], { root: srcDir })
       site,
       queryPublished,
       queryTitle,
+      styleHash,
     }),
     { exactType: "text/html; list=1" },
   );
