@@ -162,8 +162,8 @@ permissibility as a proxy for social legitimacy. But law only says what conduct
 it will not prevent—it does not certify that conduct as right. Aggressive tax
 minimization that never crosses into illegality may still be widely regarded as
 antisocial. A pharmaceutical company that legally acquires a patent on a
-long-generic drug and raises the price a hundredfold has not done something
-legal and therefore fine. Legality is a necessary condition; it is not a
+long-generic drug and raises the price a hundredfold has not something legal,
+but that does not make it fine. Legality is a necessary condition; it is not a
 sufficient one.
 
 In the chardet case, the distinction is sharper still. What the LGPL protected
