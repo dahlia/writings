@@ -1,57 +1,22 @@
 name: build
-on: [push]
+
+on:
+  push:
+  pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - uses: denoland/setup-deno@v1
-      with:
-        deno-version: v2.x
-    - id: setup-seonbi
-      uses: dahlia/seonbi/setup@0.5.0
-      with:
-        seonbi-version: 0.5.*
-        add-to-path: false
-    - run: sudo apt-get install -y git-restore-mtime
-    - run: git restore-mtime
-    - uses: actions/cache@v4
-      with:
-        key: deno
-        path: |
-          ${{ github.workspace }}/.bin
-          ${{ github.workspace }}/.deno
-    - run: |
-        deno cache --reload main.ts
-    - run: deno check main.ts
-    - run: deno lint
-    - run: deno task build -u "$BASE_URL" $EXTRA_ARGS
-      env:
-        SEONBI_API: ${{ steps.setup-seonbi.outputs.seonbi-api-path }}
-        TMPDIR: ${{ runner.temp }}
-        BASE_URL: ${{ secrets.BASE_URL }}
-        EXTRA_ARGS: ${{ secrets.EXTRA_ARGS }}
-    - if: github.ref == 'refs/heads/main'
-      uses: datanomi/SFTP-Push@v1.2.1
-      with:
-        username: ${{ secrets.SFTP_USER }}
-        server: ${{ secrets.SFTP_SERVER }}
-        port: ${{ secrets.SFTP_PORT }}
-        ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
-        local_path: ./public_html/*
-        remote_path: ${{ secrets.SFTP_REMOTE_PATH }}
-    - if: github.ref == 'refs/heads/main'
-      uses: chetan/invalidate-cloudfront-action@v2
-      env:
-        DISTRIBUTION: ${{ secrets.DISTRIBUTION }}
-        PATHS: "/*"
-        AWS_REGION: ${{ secrets.AWS_REGION }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    - uses: actions/upload-artifact@v4
-      with:
-        name: public_html
-        path: public_html/
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: jdx/mise-action@v4
+        with:
+          cache: true
+          install: true
+      - run: mise run check
+      - uses: actions/upload-artifact@v7
+        with:
+          name: site
+          path: dist/

@@ -1,0 +1,65 @@
+---
+import LanguageNav from "../components/LanguageNav.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { formatMonthDay, formatYear, yearInSeoul } from "../lib/dates";
+import { languages, type Language } from "../lib/languages";
+import { postsIn, type Post } from "../lib/posts";
+import { site } from "../lib/site";
+
+export function getStaticPaths() {
+  return languages.map((language) => ({
+    params: { lang: language.toLowerCase() },
+    props: { language },
+  }));
+}
+
+interface Props {
+  language: Language;
+}
+
+const { language } = Astro.props;
+const posts = await postsIn(language);
+const groups = Map.groupBy(posts, (post) =>
+  yearInSeoul(new Date(post.data.published)),
+);
+---
+
+<BaseLayout
+  language={language}
+  canonicalPath="/"
+  alternateLanguages={[...languages]}
+  description={site.descriptions?.[language] ?? site.titles[language]}
+  feeds
+>
+  <header>
+    <h1>{site.titles[language]}</h1>
+    <LanguageNav
+      route="/"
+      availableLanguages={[...languages]}
+      currentLanguage={language}
+    />
+  </header>
+  <nav class="articles">
+    {
+      [...groups].map(([year, yearPosts]: [number, Post[]]) => (
+        <Fragment>
+          <h2>
+            <time datetime={String(year)}>{formatYear(year, language)}</time>
+          </h2>
+          <ul>
+            {yearPosts.map((post) => (
+              <li>
+                <time datetime={post.data.published}>
+                  {formatMonthDay(new Date(post.data.published), language)}
+                </time>{" "}
+                <a href={post.data.route}>
+                  <Fragment set:html={post.data.titleHtml} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </Fragment>
+      ))
+    }
+  </nav>
+</BaseLayout>

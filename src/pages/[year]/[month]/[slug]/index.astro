@@ -1,0 +1,28 @@
+---
+import { getCollection } from "astro:content";
+import LanguageRedirect from "../../../../components/LanguageRedirect.astro";
+
+export async function getStaticPaths() {
+  const routes = new Map<
+    string,
+    Awaited<ReturnType<typeof getCollection<"posts">>>[number]
+  >();
+  for (const post of await getCollection("posts"))
+    routes.set(post.data.route, post);
+  return [...routes.values()].map((post) => ({
+    params: {
+      year: post.data.year,
+      month: post.data.month,
+      slug: post.data.slug,
+    },
+    props: {
+      route: post.data.route,
+      availableLanguages: post.data.availableLanguages,
+    },
+  }));
+}
+
+const { route, availableLanguages } = Astro.props;
+---
+
+<LanguageRedirect route={route} availableLanguages={availableLanguages} />

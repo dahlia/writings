@@ -30,7 +30,7 @@ reads:
 *[W3C]: World Wide Web Consortium
 
 
-<cite class="series">Thinking Penguin Magazine Vol.0</site>
+<cite class="series">Thinking Penguin Magazine Vol.0</cite>
 -----------------------------------------------------------
 
 日本의 聯合宇宙 開發者 모임인 [FediLUG]에서 처음으로 펴낸 同人 雜誌인

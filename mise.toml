@@ -1,3 +1,23 @@
 [tools]
-deno = "2"
-"github:dahlia/seonbi" = "latest"
+node = "26"
+pnpm = "11.11.0"
+"github:dahlia/seonbi" = "0.5.0"
+
+[settings]
+experimental = true
+
+[deps.pnpm]
+auto = true
+run = "pnpm install --frozen-lockfile"
+
+[tasks.dev]
+description = "Start Astro and rebuild changed content"
+run = "pnpm dev"
+
+[tasks.build]
+description = "Build the production site into dist/"
+run = "pnpm build"
+
+[tasks.check]
+description = "Run formatting, type, unit, and production-build checks"
+run = "pnpm check"

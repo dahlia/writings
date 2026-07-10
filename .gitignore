@@ -1,2 +1,10 @@
 .claude/settings.local.json
+node_modules/
+dist/
 public_html/
+.astro/
+.netlify/
+coverage/
+playwright-report/
+test-results/
+netlify/edge-functions/content.generated.json

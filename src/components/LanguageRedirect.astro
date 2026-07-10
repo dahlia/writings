@@ -1,0 +1,54 @@
+---
+import type { Language } from "../lib/languages";
+import { site } from "../lib/site";
+
+interface Props {
+  route: string;
+  availableLanguages: Language[];
+}
+
+const { route, availableLanguages } = Astro.props;
+---
+
+<!doctype html>
+<html
+  lang="en"
+  data-language-route={route}
+  data-available-languages={JSON.stringify(availableLanguages)}
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{site.titles.en}</title>
+    <link rel="canonical" href={route} />
+  </head>
+  <body>
+    <p>
+      {
+        availableLanguages.map((language) => (
+          <a
+            rel="alternate"
+            hreflang={language}
+            href={`${route}index.${language.toLowerCase()}.html`}
+          >
+            {site.languageNames[language]}
+          </a>
+        ))
+      }
+    </p>
+    <script>
+      import { languageFiles } from "../lib/languages";
+      import { negotiateLanguage } from "../lib/negotiate";
+
+      const root = document.documentElement;
+      const route = root.dataset.languageRoute ?? "/";
+      const available = JSON.parse(root.dataset.availableLanguages ?? "[]");
+      const language = negotiateLanguage(available, {
+        cookie: document.cookie,
+        acceptLanguage: navigator.languages.join(","),
+      });
+      location.replace(`${route}index.${languageFiles[language]}.html`);
+    </script>
+  </body>
+</html>

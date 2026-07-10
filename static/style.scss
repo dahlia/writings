@@ -474,7 +474,7 @@ ol > li {
   }
 }
 
-sup.footnote-ref > a {
+sup.footnote-ref > a, sup > a[data-footnote-ref] {
   border: none;
   padding: 0;
   background: none;
@@ -509,7 +509,7 @@ sup.footnote-ref > a {
       margin-right: 0.5rem;
     }
 
-    a.reversefootnote {
+    a.reversefootnote, a.data-footnote-backref {
       writing-mode: horizontal-tb;
       background: transparent;
       color: gray;
@@ -518,7 +518,7 @@ sup.footnote-ref > a {
   }
 }
 
-sup > a.footnote, .footnotes > ol > li:before {
+sup > a.footnote, sup > a[data-footnote-ref], .footnotes > ol > li:before {
   writing-mode: horizontal-tb;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 900;
@@ -526,4 +526,16 @@ sup > a.footnote, .footnotes > ol > li:before {
   @media (prefers-color-scheme: dark) {
     font-weight: 700;
   }
+}
+
+.footnotes > h2.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

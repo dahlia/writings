@@ -1,0 +1,10 @@
+20*/
+.vscode/
+.astro/
+dist/
+node_modules/
+public_html/
+netlify/edge-functions/content.generated.json
+pnpm-lock.yaml
+static/style.scss
+site.yaml

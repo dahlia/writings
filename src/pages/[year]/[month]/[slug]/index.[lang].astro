@@ -1,0 +1,56 @@
+---
+import { getCollection, render } from "astro:content";
+import LanguageNav from "../../../../components/LanguageNav.astro";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import { formatFullDate } from "../../../../lib/dates";
+import { languageFiles, type Language } from "../../../../lib/languages";
+import { site } from "../../../../lib/site";
+
+export async function getStaticPaths() {
+  return (await getCollection("posts")).map((post) => ({
+    params: {
+      year: post.data.year,
+      month: post.data.month,
+      slug: post.data.slug,
+      lang: languageFiles[post.data.language],
+    },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const language = post.data.language as Language;
+const description = post.data.description;
+---
+
+<BaseLayout
+  language={language}
+  pageTitle={post.data.title}
+  canonicalPath={post.data.route}
+  alternateLanguages={post.data.availableLanguages}
+  writingMode={post.data.writingMode}
+  type="article"
+  published={post.data.published}
+  description={description}
+>
+  <article>
+    <time datetime={post.data.published}>
+      {formatFullDate(new Date(post.data.published), language)}
+    </time>
+    <Content />
+  </article>
+  <footer>
+    <nav>
+      <div class="site">
+        <a href="/" rel="index">{site.titles[language]}</a>
+      </div>
+      <LanguageNav
+        element="div"
+        route={post.data.route}
+        availableLanguages={post.data.availableLanguages}
+        currentLanguage={language}
+      />
+    </nav>
+  </footer>
+</BaseLayout>

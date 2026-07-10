@@ -1,0 +1,58 @@
+---
+import { languageFiles, type Language } from "../lib/languages";
+import { site } from "../lib/site";
+
+interface Props {
+  route: string;
+  availableLanguages: Language[];
+  currentLanguage: Language;
+  element?: "div" | "nav";
+  class?: string;
+}
+
+const {
+  route,
+  availableLanguages,
+  currentLanguage,
+  element = "nav",
+  class: className,
+} = Astro.props;
+---
+
+{
+  element === "div" ? (
+    <div class:list={["languages", className]}>
+      {availableLanguages.map((language, index) => (
+        <Fragment>
+          <a
+            rel="alternate"
+            class:list={{ this: language === currentLanguage }}
+            hreflang={language}
+            lang={language}
+            href={`${route}index.${languageFiles[language]}.html`}
+          >
+            {site.languageNames[language]}
+          </a>
+          {index < availableLanguages.length - 1 && " "}
+        </Fragment>
+      ))}
+    </div>
+  ) : (
+    <nav class:list={["languages", className]}>
+      {availableLanguages.map((language, index) => (
+        <Fragment>
+          <a
+            rel="alternate"
+            class:list={{ this: language === currentLanguage }}
+            hreflang={language}
+            lang={language}
+            href={`${route}index.${languageFiles[language]}.html`}
+          >
+            {site.languageNames[language]}
+          </a>
+          {index < availableLanguages.length - 1 && " "}
+        </Fragment>
+      ))}
+    </nav>
+  )
+}
