@@ -1,6 +1,8 @@
 ---
 import LanguageRedirect from "../components/LanguageRedirect.astro";
 import { languages } from "../lib/languages";
+
+export const prerender = true;
 ---
 
 <LanguageRedirect route="/" availableLanguages={[...languages]} />

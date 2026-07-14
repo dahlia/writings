@@ -1,8 +1,23 @@
 allowBuilds:
+  "@netlify/content-engine": false
   "@parcel/watcher": true
+  content-engine: false
+  contentful: false
+  es5-ext: false
   esbuild: true
+  lmdb: false
+  msgpackr-extract: false
   netlify-cli: true
   sharp: true
   unix-dgram: true
 minimumReleaseAgeExclude:
   - prettier@3.9.5
+  - "@fedify/astro@2.4.0-dev.1668"
+  - "@fedify/fedify@2.4.0-dev.1668"
+  - "@fedify/netlify@2.4.0-dev.1668"
+  - "@fedify/postgres@2.4.0-dev.1668"
+  - "@fedify/uri-template@2.4.0-dev.1668"
+  - "@fedify/vocab-runtime@2.4.0-dev.1668"
+  - "@fedify/vocab-tools@2.4.0-dev.1668"
+  - "@fedify/vocab@2.4.0-dev.1668"
+  - "@fedify/webfinger@2.4.0-dev.1668"

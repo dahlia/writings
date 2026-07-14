@@ -3,10 +3,15 @@ import { unified } from "@astrojs/markdown-remark";
 import remarkAbbr from "@richardtowers/remark-abbr";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
+import netlify from "@astrojs/netlify";
+import { fedifyIntegration } from "@fedify/astro";
+import { siteUrl } from "./src/lib/site";
 
 export default defineConfig({
-  site: "https://writings.hongminhee.org/",
-  output: "static",
+  site: siteUrl.href,
+  output: "server",
+  adapter: netlify(),
+  integrations: [fedifyIntegration()],
   build: {
     format: "preserve",
   },

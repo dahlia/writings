@@ -1,0 +1,10 @@
+---
+import { actorIdentifier } from "../../../lib/federation/config";
+import { isFederationRuntimeEnabled } from "../../../lib/federation/runtime";
+
+const { identifier } = Astro.params;
+if (!isFederationRuntimeEnabled() || identifier !== actorIdentifier) {
+  return new Response(null, { status: 404, statusText: "Not Found" });
+}
+return Astro.redirect("/", 302);
+---

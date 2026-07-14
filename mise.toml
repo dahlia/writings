@@ -2,6 +2,7 @@
 node = "26"
 pnpm = "11.11.0"
 "github:dahlia/seonbi" = "0.5.0"
+"npm:@fedify/cli" = "2.4.0-dev.1668"
 
 [settings]
 experimental = true

@@ -6,6 +6,8 @@ import { formatFullDate } from "../../../../lib/dates";
 import { languageFiles, type Language } from "../../../../lib/languages";
 import { site } from "../../../../lib/site";
 
+export const prerender = true;
+
 export async function getStaticPaths() {
   return (await getCollection("posts")).map((post) => ({
     params: {
@@ -33,6 +35,7 @@ const description = post.data.description;
   type="article"
   published={post.data.published}
   description={description}
+  activityPubUrl={`/ap/articles/${post.data.year}/${post.data.month}/${post.data.slug}`}
 >
   <article>
     <time datetime={post.data.published}>

@@ -4,6 +4,8 @@ import { escapeXml } from "../lib/html";
 import { postsIn } from "../lib/posts";
 import { site, siteUrl } from "../lib/site";
 
+export const prerender = true;
+
 export function getStaticPaths() {
   return languages.map((language) => ({
     params: { lang: languageFiles[language] },

@@ -6,6 +6,8 @@ import { languages, type Language } from "../lib/languages";
 import { postsIn, type Post } from "../lib/posts";
 import { site } from "../lib/site";
 
+export const prerender = true;
+
 export function getStaticPaths() {
   return languages.map((language) => ({
     params: { lang: language.toLowerCase() },
@@ -30,6 +32,7 @@ const groups = Map.groupBy(posts, (post) =>
   alternateLanguages={[...languages]}
   description={site.descriptions?.[language] ?? site.titles[language]}
   feeds
+  activityPubUrl="/ap/actors/hongminhee"
 >
   <header>
     <h1>{site.titles[language]}</h1>

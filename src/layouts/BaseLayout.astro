@@ -1,5 +1,6 @@
 ---
 import "../../static/style.scss";
+import { federationOrigin } from "../lib/federation/config";
 import type { Language } from "../lib/languages";
 import { site, siteUrl } from "../lib/site";
 
@@ -13,6 +14,7 @@ interface Props {
   published?: string;
   description: string;
   feeds?: boolean;
+  activityPubUrl?: URL | string;
 }
 
 const {
@@ -27,12 +29,17 @@ const {
   published,
   description,
   feeds = false,
+  activityPubUrl,
 } = Astro.props;
 const title =
   pageTitle == null
     ? site.titles[language]
     : `${pageTitle} — ${site.titles[language]}`;
 const canonicalUrl = new URL(canonicalPath, siteUrl);
+const activityPubHref =
+  activityPubUrl == null
+    ? undefined
+    : new URL(activityPubUrl, federationOrigin);
 ---
 
 <!doctype html>
@@ -67,6 +74,15 @@ const canonicalUrl = new URL(canonicalPath, siteUrl);
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={pageTitle ?? site.titles[language]} />
     <meta name="twitter:description" content={description} />
+    {
+      activityPubHref != null && (
+        <link
+          rel="alternate"
+          type="application/activity+json"
+          href={activityPubHref}
+        />
+      )
+    }
     {
       feeds &&
         alternateLanguages.map((alternate) => (

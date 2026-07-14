@@ -18,6 +18,11 @@ import {
   transform,
   withDictionary,
 } from "../lib/seonbi";
+import {
+  assertActivitySizes,
+  groupFederatedPosts,
+  type PostEntryData,
+} from "../lib/federation/model";
 
 const execFileAsync = promisify(execFile);
 const root = resolve(new URL("../..", import.meta.url).pathname);
@@ -132,6 +137,7 @@ async function loadPosts(context: LoaderContext): Promise<void> {
   }
 
   context.store.clear();
+  const federatedEntries: PostEntryData[] = [];
   for (const source of sources) {
     const rendered = await context.renderMarkdown(source.markdown, {
       fileURL: new URL(`file://${source.absolutePath}`),
@@ -237,6 +243,8 @@ async function loadPosts(context: LoaderContext): Promise<void> {
 
     for (const variant of variants) {
       const id = `${source.year}/${source.month}/${source.slug}/${variant.language}`;
+      const description =
+        source.description ?? extractDescription(variant.html);
       const data = await context.parseData({
         id,
         filePath: source.filePath,
@@ -251,11 +259,23 @@ async function loadPosts(context: LoaderContext): Promise<void> {
           updated: source.updated,
           title: variant.title,
           titleHtml: variant.titleHtml,
-          description: source.description ?? extractDescription(variant.html),
+          description,
           html: variant.html,
           writingMode: variant.writingMode,
           sourcePath: source.filePath,
         },
+      });
+      federatedEntries.push({
+        route: source.route,
+        year: source.year,
+        month: source.month,
+        slug: source.slug,
+        language: variant.language,
+        published: source.published,
+        updated: source.updated,
+        title: variant.title,
+        description,
+        html: variant.html,
       });
       context.store.set({
         id,
@@ -271,6 +291,7 @@ async function loadPosts(context: LoaderContext): Promise<void> {
   }
 
   context.watcher?.add(paths.map((path) => resolve(root, path)));
+  await assertActivitySizes(groupFederatedPosts(federatedEntries));
   context.logger.info(
     `Loaded ${context.store.keys().length} language variants from ${sources.length} sources`,
   );

@@ -1,6 +1,12 @@
 import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
+import { parse } from "yaml";
 import manifest from "../netlify/edge-functions/content.generated.json" with { type: "json" };
+
+const site = parse(await readFile("site.yaml", "utf8"));
+const federationOrigin = new URL(
+  process.env.FEDERATION_ORIGIN ?? process.env.URL ?? site.url,
+).origin;
 
 const languageFiles = {
   en: "en",
@@ -48,6 +54,23 @@ if (exampleEnglish.includes("//static/") || exampleEnglish.includes("Jikji")) {
   throw new Error(
     "Legacy asset URLs or generator metadata remain in post output",
   );
+}
+if (
+  !exampleEnglish.includes(
+    `type="application/activity+json" href="${federationOrigin}/ap/articles/2026/03/legal-vs-legitimate"`,
+  )
+) {
+  throw new Error("Post output does not advertise its ActivityPub Article");
+}
+
+const indexEnglish = await assertFile("index.en.html");
+if (
+  !indexEnglish.includes(
+    `type="application/activity+json" href="${federationOrigin}/ap/actors/hongminhee"`,
+  ) ||
+  !indexEnglish.includes('content="@hongminhee@writings.hongminhee.org"')
+) {
+  throw new Error("Site output does not advertise the local fediverse actor");
 }
 
 const exampleHangul = await assertFile(
