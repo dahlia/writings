@@ -1,0 +1,71 @@
+---
+import { actorIdentifier } from "../lib/federation/config";
+import type { Language } from "../lib/languages";
+
+interface Props {
+  language: Language;
+  kind: "article" | "website";
+  activityPubUrl: URL;
+}
+
+interface Message {
+  before: string;
+  after: string;
+}
+
+const messages: Record<Language, Record<Props["kind"], Message>> = {
+  en: {
+    website: {
+      before: "This blog is available on the fediverse at ",
+      after: ".",
+    },
+    article: {
+      before: "This post can be found on the fediverse by searching for ",
+      after: ".",
+    },
+  },
+  "ko-Hang-KR": {
+    website: {
+      before: "이 블로그는 연합우주(페디버스)에서 ",
+      after: " 핸들로 접근할 수 있습니다.",
+    },
+    article: {
+      before: "이 글은 연합우주(페디버스)에서 ",
+      after: "로 검색해서 찾을 수 있습니다.",
+    },
+  },
+  "ko-Kore": {
+    website: {
+      before: "이 블로그는 聯合宇宙(fediverse)에서 ",
+      after: " 핸들로 接近할 수 있습니다.",
+    },
+    article: {
+      before: "이 글은 聯合宇宙(fediverse)에서 ",
+      after: "로 檢索해서 찾을 수 있습니다.",
+    },
+  },
+  ja: {
+    website: {
+      before: "このブログはフェディバースで",
+      after: "というハンドルからアクセスできます。",
+    },
+    article: {
+      before: "この記事はフェディバースで",
+      after: "を検索すると見つけられます。",
+    },
+  },
+};
+
+const { language, kind, activityPubUrl } = Astro.props;
+const message = messages[language][kind];
+const reference =
+  kind === "article"
+    ? activityPubUrl.href
+    : `@${actorIdentifier}@${activityPubUrl.host}`;
+---
+
+<p class="fediverse-discovery">
+  {message.before}<span class="fediverse-reference">{reference}</span>{
+    message.after
+  }
+</p>

@@ -1,5 +1,6 @@
 ---
 import "../../static/style.scss";
+import FediverseDiscovery from "../components/FediverseDiscovery.astro";
 import { federationOrigin } from "../lib/federation/config";
 import type { Language } from "../lib/languages";
 import { site, siteUrl } from "../lib/site";
@@ -99,6 +100,15 @@ const activityPubHref =
   </head>
   <body>
     <slot />
+    {
+      activityPubHref != null && (
+        <FediverseDiscovery
+          language={language}
+          kind={type}
+          activityPubUrl={activityPubHref}
+        />
+      )
+    }
     <script>
       document
         .querySelectorAll<HTMLAnchorElement>("a[rel=alternate][hreflang]")

@@ -181,6 +181,39 @@ body > nav.articles {
   }
 }
 
+body > .fediverse-discovery {
+  margin: 0;
+  margin-block-start: 3rem;
+  padding-block-end: 1rem;
+  color: #666;
+  font-family: 'Source Sans Pro', 'Noto Sans', sans-serif;
+  font-size: smaller;
+  font-weight: 100;
+
+  @media (prefers-color-scheme: dark) {
+    color: #aaa;
+  }
+
+  &:lang(ko) {
+    font-family: 'Noto Sans CJK KR', 'Noto Sans KR', sans-serif;
+  }
+
+  &:lang(ja) {
+    font-family: 'Noto Sans CJK JP', 'Noto Sans JP', sans-serif;
+  }
+}
+
+.fediverse-reference {
+  color: #222;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+  user-select: all;
+
+  @media (prefers-color-scheme: dark) {
+    color: #eee;
+  }
+}
+
 body > header > h1, body > footer > nav > .site {
   white-space: nowrap;
 

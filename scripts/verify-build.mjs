@@ -7,6 +7,7 @@ const site = parse(await readFile("site.yaml", "utf8"));
 const federationOrigin = new URL(
   process.env.FEDERATION_ORIGIN ?? process.env.URL ?? site.url,
 ).origin;
+const federationHost = new URL(federationOrigin).host;
 
 const languageFiles = {
   en: "en",
@@ -62,11 +63,23 @@ if (
 ) {
   throw new Error("Post output does not advertise its ActivityPub Article");
 }
+if (
+  !exampleEnglish.includes(
+    `class="fediverse-reference">${federationOrigin}/ap/articles/2026/03/legal-vs-legitimate</span>`,
+  )
+) {
+  throw new Error(
+    "Post output does not explain how to find its ActivityPub Article",
+  );
+}
 
 const indexEnglish = await assertFile("index.en.html");
 if (
   !indexEnglish.includes(
     `type="application/activity+json" href="${federationOrigin}/ap/actors/hongminhee"`,
+  ) ||
+  !indexEnglish.includes(
+    `class="fediverse-reference">@hongminhee@${federationHost}</span>`,
   ) ||
   !indexEnglish.includes('content="@hongminhee@writings.hongminhee.org"')
 ) {
