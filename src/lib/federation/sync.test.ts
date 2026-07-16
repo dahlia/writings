@@ -1,7 +1,14 @@
-import { Article, Create, OrderedCollection } from "@fedify/vocab";
-import { MemoryKvStore, type Context } from "@fedify/fedify";
+import {
+  Article,
+  Create,
+  OrderedCollection,
+  OrderedCollectionPage,
+} from "@fedify/vocab";
+import { createFederation, MemoryKvStore, type Context } from "@fedify/fedify";
+import { getDocumentLoader } from "@fedify/vocab-runtime";
 import { describe, expect, test, vi } from "vitest";
 import {
+  federationKvPrefix,
   publicationSyncLockRetryDelayMs,
   publicationSyncLockTtlMs,
 } from "./config";
@@ -231,6 +238,81 @@ test("reconcileArticles assigns a fresh Create ID when a post returns", async ()
   expect((restoredCreate as Create).id?.href).not.toBe(originalCreate.id?.href);
 });
 
+test("reconcileArticles preserves activity counters while reseeding legacy sync state", async () => {
+  const kv = new MemoryKvStore();
+  await kv.set([...federationKvPrefix, "sync", "initialized"], true);
+  const existingId = "https://publisher.example/ap/articles/existing";
+  const version = (name: string): CurrentArticle => {
+    const article = new Article({ id: new URL(existingId), name });
+    return {
+      id: existingId,
+      hash: name,
+      article,
+      create: new Create({
+        id: new URL("#create", existingId),
+        object: article,
+      }),
+    };
+  };
+  const first = version("Version 1");
+  const updated = version("Version 2");
+  const second = current(
+    "https://publisher.example/ap/articles/new",
+    "new-hash",
+  );
+  await kv.set([...federationKvPrefix, "sync", "posts", first.id], {
+    id: first.id,
+    hash: "legacy-hash",
+    present: false,
+    generation: 4,
+    revision: 7,
+  });
+  let articles = [first];
+  const source = {
+    lookupObject: vi.fn().mockResolvedValue(new OrderedCollection({})),
+    async *traverseCollection() {
+      yield* articles.map((article) => article.create);
+    },
+  } as unknown as Context<unknown>;
+  const sendActivity = vi.fn();
+  const deliveryContext = {
+    getActorUri: () => new URL("https://publisher.example/ap/actors/author"),
+    getFollowersUri: () =>
+      new URL("https://publisher.example/ap/actors/author/followers"),
+    sendActivity,
+  } as unknown as Context<unknown>;
+  const steps = {
+    run: async <T>(_stepId: string, callback: () => T | Promise<T>) =>
+      callback(),
+  };
+  const outboxUri = new URL(
+    "https://publisher.example/ap/actors/author/outbox",
+  );
+
+  await reconcileArticles(deliveryContext, kv, steps, {
+    context: source,
+    outboxUri,
+  });
+  articles = [updated];
+  await reconcileArticles(deliveryContext, kv, steps, {
+    context: source,
+    outboxUri,
+  });
+  articles = [second, updated];
+  await reconcileArticles(deliveryContext, kv, steps, {
+    context: source,
+    outboxUri,
+  });
+
+  expect(sendActivity).toHaveBeenCalledTimes(2);
+  expect((sendActivity.mock.calls[0]?.[2] as { id?: URL }).id?.href).toContain(
+    "#update-4-8-",
+  );
+  expect((sendActivity.mock.calls[1]?.[2] as Create).objectId?.href).toBe(
+    second.id,
+  );
+});
+
 test("reconcileArticles assigns a new Update ID when content cycles", async () => {
   const kv = new MemoryKvStore();
   const articleId = new URL("https://publisher.example/ap/articles/cyclic");
@@ -331,6 +413,59 @@ test("createDeployDocumentLoader pins every canonical request to one deploy", as
   expect(document.documentUrl).toBe(
     "https://publisher.example/ap/actors/author/outbox?cursor=10",
   );
+});
+
+test("createDeployDocumentLoader traverses deploy-origin outbox pages", async () => {
+  const canonicalOrigin = new URL("https://publisher.example/");
+  const deployOrigin = new URL("https://deploy-id--publisher.netlify.app/");
+  const outboxUri = new URL("ap/actors/author/outbox", canonicalOrigin);
+  const canonicalPageUri = new URL(`${outboxUri.href}?cursor=`);
+  const deployedPageUri = new URL(
+    `${canonicalPageUri.pathname}${canonicalPageUri.search}`,
+    deployOrigin,
+  );
+  const article = new Article({
+    id: new URL("ap/articles/post", canonicalOrigin),
+  });
+  const create = new Create({
+    id: new URL("#create", article.id!),
+    object: article,
+  });
+  const documents = new Map([
+    [
+      new URL(outboxUri.pathname, deployOrigin).href,
+      await new OrderedCollection({
+        id: outboxUri,
+        totalItems: 1,
+        first: deployedPageUri,
+      }).toJsonLd(),
+    ],
+    [
+      deployedPageUri.href,
+      await new OrderedCollectionPage({
+        id: canonicalPageUri,
+        partOf: outboxUri,
+        items: [create],
+      }).toJsonLd(),
+    ],
+  ]);
+  const loader = vi.fn(async (url: string) => ({
+    contextUrl: null,
+    document: documents.get(url),
+    documentUrl: url,
+  }));
+  const federation = createFederation<void>({
+    kv: new MemoryKvStore(),
+    contextLoaderFactory: getDocumentLoader,
+    documentLoaderFactory: () =>
+      createDeployDocumentLoader(loader, canonicalOrigin, deployOrigin),
+  });
+  const context = federation.createContext(canonicalOrigin, undefined);
+
+  const articles = await collectCurrentArticles(context, outboxUri);
+
+  expect(articles.map((current) => current.id)).toEqual([article.id?.href]);
+  expect(loader).toHaveBeenCalledWith(deployedPageUri.href, undefined);
 });
 
 test("createDeployDocumentLoader leaves other origins unchanged", async () => {

@@ -62,19 +62,24 @@ export function createDeployDocumentLoader(
 ): DocumentLoader {
   return async (url, options) => {
     const requestedUrl = new URL(url);
-    if (requestedUrl.origin !== canonicalOrigin.origin) {
+    if (
+      requestedUrl.origin !== canonicalOrigin.origin &&
+      requestedUrl.origin !== deployOrigin.origin
+    ) {
       return loader(url, options);
     }
-    const deployedUrl = new URL(
-      `${requestedUrl.pathname}${requestedUrl.search}${requestedUrl.hash}`,
-      deployOrigin,
-    );
+    const path = `${requestedUrl.pathname}${requestedUrl.search}${requestedUrl.hash}`;
+    const deployedUrl = new URL(path, deployOrigin);
     const document = await loader(deployedUrl.href, options);
-    return { ...document, documentUrl: requestedUrl.href };
+    return {
+      ...document,
+      documentUrl: new URL(path, canonicalOrigin).href,
+    };
   };
 }
 
 const initializedKey = [...federationKvPrefix, "sync", "initialized"] as KvKey;
+const syncStateVersion = 2;
 const lockKey = [...federationKvPrefix, "sync", "lock"] as KvKey;
 const postsPrefix = [...federationKvPrefix, "sync", "posts"] as KvKey;
 const lastDeploymentKey = [
@@ -238,19 +243,25 @@ export async function reconcileArticles(
       source.context,
       source.outboxUri,
     );
-    if ((await kv.get(initializedKey)) == null) {
+    if ((await kv.get(initializedKey)) !== syncStateVersion) {
+      const storedById = new Map(
+        (await getStoredArticles(kv)).map((article) => [article.id, article]),
+      );
       for (const article of current) {
+        const previous = storedById.get(article.id);
         await steps.run(`seed:${article.hash}`, () =>
           kv.set(postKey(article.id), {
             id: article.id,
             hash: article.hash,
             present: true,
-            generation: 0,
-            revision: 0,
+            generation: previous?.generation ?? 0,
+            revision: previous?.revision ?? 0,
           }),
         );
       }
-      await steps.run("seed:complete", () => kv.set(initializedKey, true));
+      await steps.run("seed:complete", () =>
+        kv.set(initializedKey, syncStateVersion),
+      );
     } else {
       const actions = planReconciliation(current, await getStoredArticles(kv));
       const actor = context.getActorUri(actorIdentifier);
