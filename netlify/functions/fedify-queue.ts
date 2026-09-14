@@ -12,34 +12,47 @@ import {
   syncMaxRetries,
 } from "../../src/lib/federation/config";
 import { createNetlifyServices } from "../../src/lib/federation/services";
+import { queueEventName } from "../../src/lib/federation/storage";
 
-const { kv, queue } = createNetlifyServices({ baseUrl: federationOrigin });
-const contextData: FederationContextData = {
-  kv,
-  getPosts: async () => [],
+async function createHandler() {
+  const { kv, queue } = await createNetlifyServices({
+    baseUrl: federationOrigin,
+    origin: federationOrigin,
+  });
+  const contextData: FederationContextData = {
+    kv,
+    getPosts: async () => [],
+  };
+
+  return createNetlifyQueueHandler<FederationContextData>({
+    queue,
+    maxRetries: syncMaxRetries,
+    federation: () =>
+      builder.build({
+        kv,
+        queue,
+        manuallyStartQueue: true,
+        origin: federationOrigin,
+      }),
+    contextData: (event) => {
+      const deployId = event.request.headers.get("x-nf-deploy-id");
+      return {
+        ...contextData,
+        ...(deployId == null ? {} : { deployId }),
+      };
+    },
+  });
+}
+
+export default async (
+  ...args: Parameters<Awaited<ReturnType<typeof createHandler>>>
+) => {
+  const handler = await createHandler();
+  return handler(...args);
 };
 
-export default createNetlifyQueueHandler<FederationContextData>({
-  queue,
-  maxRetries: syncMaxRetries,
-  federation: () =>
-    builder.build({
-      kv,
-      queue,
-      manuallyStartQueue: true,
-      origin: federationOrigin,
-    }),
-  contextData: (event) => {
-    const deployId = event.request.headers.get("x-nf-deploy-id");
-    return {
-      ...contextData,
-      ...(deployId == null ? {} : { deployId }),
-    };
-  },
-});
-
 export const asyncWorkloadConfig: AsyncWorkloadConfig<NetlifyQueueEvent> = {
-  events: [queue.eventName],
+  events: [queueEventName],
   maxRetries: syncMaxRetries,
   backoffSchedule: (attempt) => 5_000 * 2 ** attempt,
   ...(process.env.CONTEXT === "production" || process.env.CONTEXT === "dev"

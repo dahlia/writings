@@ -20,8 +20,9 @@ mise run check
 ```
 
 生成物은 *dist/*에 놓인다. `pnpm netlify:dev`는 Netlify Edge Function과
-Functions를 包含한 로컬 環境을 띄운다. Netlify Database를 쓸 수 있으면
-PostgreSQL과 Async Workloads도 使用한다. 普通 `mise run dev`에서는 federation
+Functions를 包含한 로컬 環境을 띄운다. 로컬 Netlify Blobs와 Async Workloads를
+使用한다. `FEDERATION_STORAGE=postgres`로 旣存 Database 經路도 選擇할 수 있다.
+普通 `mise run dev`에서는 federation
 狀態와 queue를 메모리에 둔다.
 
 ActivityPub
@@ -48,9 +49,12 @@ Netlify에서 이 貯藏所를 連結하면 *netlify.toml*의 빌드 設定이 �
 Netlify의 Pretty URLs 後處理는 明示的으로 꺼 두었는데, 이는
 _index.ko-kore.html_ 같은 旣存 公開 URL을 保存하기 爲함이다.
 
-ActivityPub을 production에서 켜려면 Netlify site에 [Netlify Database]를
-provision하고 [Async Workloads] extension을 設置해야 한다. Web request와 queue
-consumer는 같은 PostgreSQL KV 및 `NetlifyMessageQueue`를 使用한다. Deploy
+ActivityPub은 [Async Workloads] extension을 使用한다. Web request와 queue
+consumer는 같은 KV 및 `NetlifyMessageQueue`를 使用한다. 旣存 配布는 設定을 바꾸기
+前까지 [Netlify Database]를 維持한다. `FEDERATION_STORAGE=blobs`로 바꾸면
+strong consistency의 [Netlify Blobs] `fedify` store를 使用한다. Production에서는
+移行 完了 marker가 必須이므로, 먼저 [移行 手順](docs/federation-blobs-migration.md)을
+따라야 한다. 單純히 DB를 끊거나 빈 store로 바꾸면 안 된다. Deploy
 Preview와 branch deploy에서는 federation과 workload가 모두 꺼진다.
 
 成功한 production deploy는 `writings:sync-posts` workload를 enqueue한다. 매일
@@ -69,6 +73,7 @@ event가 더는 retry되지 않는지 먼저 確認한다. 그 뒤 event data의
 [Astro]: https://astro.build/
 [Netlify]: https://www.netlify.com/
 [Netlify Database]: https://docs.netlify.com/build/data-and-storage/netlify-database/
+[Netlify Blobs]: https://docs.netlify.com/build/data-and-storage/netlify-blobs/
 [Async Workloads]: https://docs.netlify.com/build/async-workloads/get-started/
 [Seonbi]: https://github.com/dahlia/seonbi
 [mise]: https://mise.jdx.dev/

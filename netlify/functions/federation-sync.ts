@@ -15,6 +15,7 @@ import {
   syncMaxRetries,
 } from "../../src/lib/federation/config";
 import { createNetlifyServices } from "../../src/lib/federation/services";
+import { isFederationMaintenance } from "../../src/lib/federation/storage";
 import {
   createDeployDocumentLoader,
   reconcileArticles,
@@ -30,11 +31,15 @@ interface SyncEvent extends CustomAsyncWorkloadEvent {
 }
 
 export default asyncWorkloadFn<SyncEvent>(async (event) => {
+  if (isFederationMaintenance()) return;
   const deployId = event.eventData.deployId;
   const deployUrl = event.eventData.deployUrl;
   const publishedAt = event.eventData.publishedAt;
   if ((deployId == null) !== (publishedAt == null)) return;
-  const { kv, queue } = createNetlifyServices({ baseUrl: federationOrigin });
+  const { kv, queue } = await createNetlifyServices({
+    baseUrl: federationOrigin,
+    origin: federationOrigin,
+  });
   const contextData = {
     kv,
     getPosts: async () => {

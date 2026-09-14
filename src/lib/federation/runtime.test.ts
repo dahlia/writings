@@ -1,31 +1,62 @@
+import { MemoryKvStore } from "@fedify/fedify";
 import { describe, expect, test } from "vitest";
-import { selectFederationServices } from "./config";
+import {
+  assertBlobsReady,
+  selectFederationServices,
+  storageReadyKey,
+} from "./storage";
 
-describe("selectFederationServices", () => {
-  test("uses persistent services in production when a database is available", () => {
-    expect(selectFederationServices("production", true)).toBe("netlify");
-  });
-
-  test("disables federation in production without a database", () => {
+describe("federation storage selection", () => {
+  test("keeps legacy production until explicitly switched", () => {
+    expect(selectFederationServices("production", true)).toBe("postgres");
     expect(selectFederationServices("production", false)).toBe("disabled");
+    expect(selectFederationServices("production", false, "blobs")).toBe(
+      "blobs",
+    );
   });
-
-  test("disables federation for non-production deploys", () => {
-    expect(selectFederationServices("deploy-preview", true)).toBe("disabled");
-    expect(selectFederationServices("branch-deploy", true)).toBe("disabled");
-    expect(selectFederationServices("preview-server", true)).toBe("disabled");
+  test("disables all non-production deployments even with Blobs selected", () => {
+    for (const context of [
+      "deploy-preview",
+      "branch-deploy",
+      "preview-server",
+      "unknown",
+    ]) {
+      expect(selectFederationServices(context, true, "blobs", true)).toBe(
+        "disabled",
+      );
+    }
   });
-
-  test("uses persistent services in Netlify Dev when a database is available", () => {
-    expect(selectFederationServices("dev", true)).toBe("netlify");
+  test("only explicit Astro development permits memory", () => {
+    expect(selectFederationServices(undefined, true)).toBe("disabled");
+    expect(selectFederationServices(undefined, false, undefined, true)).toBe(
+      "memory",
+    );
+    expect(selectFederationServices("dev", false)).toBe("blobs");
+    expect(selectFederationServices("dev", true, "postgres")).toBe("postgres");
   });
-
-  test("uses in-process services in plain Astro dev", () => {
-    expect(selectFederationServices(undefined, true)).toBe("memory");
+  test("rejects typos rather than selecting another backend", () => {
+    expect(() =>
+      selectFederationServices("production", true, "blob"),
+    ).toThrow();
   });
-
-  test("uses in-process services when no database is available", () => {
-    expect(selectFederationServices("dev", false)).toBe("memory");
-    expect(selectFederationServices(undefined, false)).toBe("memory");
+  test("requires an origin-bound migration marker and can retry after it appears", async () => {
+    const kv = new MemoryKvStore();
+    await expect(assertBlobsReady(kv, "https://example.com")).rejects.toThrow(
+      "not ready",
+    );
+    await kv.set(storageReadyKey, {
+      version: 1,
+      origin: "https://other.example",
+    });
+    await expect(assertBlobsReady(kv, "https://example.com")).rejects.toThrow(
+      "not ready",
+    );
+    await kv.set(storageReadyKey, {
+      version: 1,
+      origin: "https://example.com",
+    });
+    await expect(
+      assertBlobsReady(kv, "https://example.com"),
+    ).resolves.toBeUndefined();
   });
 });

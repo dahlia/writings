@@ -26,22 +26,4 @@ export const syncMaxRetries = 6;
 export const publicationSyncLockTtlMs = 10 * 60_000;
 export const publicationSyncLockRetryDelayMs = publicationSyncLockTtlMs + 5_000;
 
-export type FederationServices = "disabled" | "memory" | "netlify";
-
-export function selectFederationServices(
-  context: string | undefined,
-  databaseAvailable: boolean,
-): FederationServices {
-  if (
-    context === "deploy-preview" ||
-    context === "branch-deploy" ||
-    context === "preview-server"
-  ) {
-    return "disabled";
-  }
-  if (context === "production") {
-    return databaseAvailable ? "netlify" : "disabled";
-  }
-  if (context === "dev" && databaseAvailable) return "netlify";
-  return "memory";
-}
+export { selectFederationServices } from "./storage";

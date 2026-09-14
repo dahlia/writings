@@ -12,12 +12,15 @@ allowBuilds:
   unix-dgram: true
 minimumReleaseAgeExclude:
   - prettier@3.9.5
-  - "@fedify/astro@2.4.0-dev.1668"
-  - "@fedify/fedify@2.4.0-dev.1668"
-  - "@fedify/netlify@2.4.0-dev.1668"
-  - "@fedify/postgres@2.4.0-dev.1668"
-  - "@fedify/uri-template@2.4.0-dev.1668"
-  - "@fedify/vocab-runtime@2.4.0-dev.1668"
-  - "@fedify/vocab-tools@2.4.0-dev.1668"
-  - "@fedify/vocab@2.4.0-dev.1668"
-  - "@fedify/webfinger@2.4.0-dev.1668"
+  - "@fedify/astro@2.4.0-dev.1936"
+  - "@fedify/fedify@2.4.0-dev.1936"
+  - "@fedify/netlify@2.4.0-dev.1936"
+  - "@fedify/postgres@2.4.0-dev.1936"
+  - "@fedify/uri-template@2.4.0-dev.1936"
+  - "@fedify/vocab-runtime@2.4.0-dev.1936"
+  - "@fedify/vocab-tools@2.4.0-dev.1936"
+  - "@fedify/vocab@2.4.0-dev.1936"
+  - "@fedify/webfinger@2.4.0-dev.1936"
+patchedDependencies:
+  "@netlify/blobs@10.7.9": patches/@netlify__blobs@10.7.9.patch
+  "@netlify/blobs@11.0.3": patches/@netlify__blobs@11.0.3.patch

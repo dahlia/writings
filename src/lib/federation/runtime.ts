@@ -1,4 +1,3 @@
-import { getContext } from "@netlify/functions";
 import { builder, type FederationContextData } from "./builder";
 import { federationOrigin, selectFederationServices } from "./config";
 import { getFederatedPosts } from "./posts";
@@ -7,6 +6,7 @@ import {
   createNetlifyServices,
   hasNetlifyDatabase,
 } from "./services";
+import { getDeployContext } from "./storage";
 
 export interface WebRuntime {
   readonly enabled: boolean;
@@ -14,32 +14,33 @@ export interface WebRuntime {
   readonly contextData?: FederationContextData;
 }
 
-export function getDeployContext(): string | undefined {
-  try {
-    return getContext().deploy.context;
-  } catch {
-    return process.env.CONTEXT;
-  }
-}
-
-export function isFederationRuntimeEnabled(): boolean {
-  return (
-    selectFederationServices(getDeployContext(), hasNetlifyDatabase()) !==
-    "disabled"
-  );
-}
-
-export async function createWebRuntime(): Promise<WebRuntime> {
+function selectWebServices() {
   const deployContext = getDeployContext();
   const servicesKind = selectFederationServices(
     deployContext,
-    hasNetlifyDatabase(),
+    (deployContext === "production" || deployContext === "dev") &&
+      process.env.FEDERATION_STORAGE !== "blobs" &&
+      (deployContext !== "dev" || process.env.FEDERATION_STORAGE === "postgres")
+      ? hasNetlifyDatabase()
+      : false,
+    process.env.FEDERATION_STORAGE,
+    import.meta.env.DEV,
   );
+  return { deployContext, servicesKind };
+}
+
+export function isFederationRuntimeEnabled(): boolean {
+  return selectWebServices().servicesKind !== "disabled";
+}
+
+export async function createWebRuntime(): Promise<WebRuntime> {
+  const { deployContext, servicesKind } = selectWebServices();
   if (servicesKind === "disabled") return { enabled: false };
 
-  const useNetlify = servicesKind === "netlify";
+  const useNetlify = servicesKind !== "memory";
   const services = useNetlify
-    ? createNetlifyServices({
+    ? await createNetlifyServices({
+        origin: federationOrigin,
         baseUrl:
           process.env.FEDERATION_BASE_URL ??
           (deployContext === "dev"

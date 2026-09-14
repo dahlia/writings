@@ -5,6 +5,7 @@ import type {
 } from "@netlify/functions";
 import { AsyncWorkloadsClient } from "@netlify/async-workloads";
 import { syncEventName } from "../../src/lib/federation/config";
+import { isFederationMaintenance } from "../../src/lib/federation/storage";
 
 interface PublicationDeploy {
   readonly id: string;
@@ -15,6 +16,7 @@ interface PublicationDeploy {
 export async function enqueuePublicationSync(
   deploy?: PublicationDeploy,
 ): Promise<void> {
+  if (isFederationMaintenance()) return;
   const result = await new AsyncWorkloadsClient().send(syncEventName, {
     data:
       deploy == null

@@ -2,7 +2,7 @@ import type {
   DeploySucceededEvent,
   DeployUnlockedEvent,
 } from "@netlify/functions";
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 const send = vi.fn();
 
@@ -31,6 +31,12 @@ function event(
 }
 
 describe("publication deploy events", () => {
+  afterEach(() => vi.unstubAllEnvs());
+  test("does not enqueue while federation is in maintenance", async () => {
+    vi.stubEnv("FEDERATION_MAINTENANCE", "true");
+    await handler.deploySucceeded?.(event());
+    expect(send).not.toHaveBeenCalled();
+  });
   beforeEach(() => {
     send.mockReset();
     send.mockResolvedValue({ eventId: "event-id", sendStatus: "succeeded" });
