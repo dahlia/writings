@@ -1,9 +1,10 @@
 import { exportJwk, generateCryptoKeyPair, type KvKey } from "@fedify/fedify";
 import { NetlifyBlobsKvStore, type NetlifyBlobsStore } from "@fedify/netlify";
-import { beforeAll, describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test, vi } from "vitest";
 import { spawnSync } from "node:child_process";
 import {
   encodeMigrationKey,
+  isRebuildableCache,
   migrateFederation,
   type SourceEntry,
 } from "../scripts/federation-migration";
@@ -87,6 +88,141 @@ beforeAll(async () => {
 });
 
 describe("offline federation migration", () => {
+  test("drops only recognized refetchable cache layouts, not replay or application state", async () => {
+    const caches = [
+      ["_fedify", "publicKey", "remote"],
+      ["_fedify", "publicKey", "__fetchError", "remote"],
+      ["_fedify", "remoteDocument", "remote"],
+      ["_fedify", "httpMessageSignaturesSpec", "remote"],
+    ];
+    for (const key of caches) expect(isRebuildableCache(key)).toBe(true);
+    const retained = [
+      "activityIdempotence",
+      "acceptSignatureNonce",
+      "taskDeduplication",
+      "circuit",
+      "unknown",
+    ].map((kind) => ({
+      key: ["_fedify", kind, "remote"],
+      value: true,
+      expiresAt: null,
+    }));
+    retained.push({
+      key: ["_fedify", "publicKey", "unknown", "layout"],
+      value: true,
+      expiresAt: null,
+    });
+    for (const entry of [...baseline, ...retained])
+      expect(isRebuildableCache(entry.key)).toBe(false);
+    const store = new TestStore();
+    const result = await migrateFederation(
+      [
+        ...baseline,
+        ...retained,
+        ...caches.map((key) => ({ key, value: "cache", expiresAt: null })),
+        {
+          key: ["_fedify", "publicKey", "x".repeat(600)],
+          value: "oversized cache",
+          expiresAt: null,
+        },
+      ],
+      store,
+      options,
+    );
+    expect(result.skippedCache).toBe(5);
+    expect(result.selected).toBe(baseline.length + retained.length);
+    for (const entry of retained)
+      expect(store.entries.has(encodeMigrationKey(entry.key))).toBe(true);
+    for (const key of caches)
+      expect(store.entries.has(encodeMigrationKey(key))).toBe(false);
+  });
+  test("thousands of caches need no destination requests and dry-run reads selected keys once", async () => {
+    const store = new TestStore();
+    const reads = vi.spyOn(store, "getWithMetadata");
+    const cache = Array.from({ length: 8301 }, (_, n) => ({
+      key: ["_fedify", "publicKey", String(n)],
+      value: null,
+      expiresAt: null,
+    }));
+    const result = await migrateFederation([...baseline, ...cache], store, {
+      origin: options.origin,
+    });
+    expect(result).toMatchObject({
+      selected: 3,
+      skippedCache: 8301,
+      copied: 0,
+    });
+    expect(reads).toHaveBeenCalledTimes(4);
+    expect(store.writes).toBe(0);
+  });
+  test("bounded workers stop scheduling after failure and settle in-flight writes before rejecting", async () => {
+    const store = new TestStore();
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const original = store.setJSON.bind(store);
+    const write = vi
+      .spyOn(store, "setJSON")
+      .mockImplementation(async (key, data, opts) => {
+        if (key === encodeMigrationKey(baseline[0]!.key)) {
+          await gate;
+          return original(key, data, opts);
+        }
+        throw new Error("injected concurrent failure");
+      });
+    let settled = false;
+    const outcome = migrateFederation(baseline, store, {
+      ...options,
+      concurrency: 2,
+    })
+      .then(
+        () => null,
+        (error: unknown) => error,
+      )
+      .finally(() => {
+        settled = true;
+      });
+    await vi.waitFor(() => expect(write).toHaveBeenCalledTimes(2));
+    expect(settled).toBe(false);
+    release();
+    expect(await outcome).toMatchObject({
+      message: "injected concurrent failure",
+    });
+    expect(write).toHaveBeenCalledTimes(2);
+    expect(store.entries.has(encodeMigrationKey(storageReadyKey))).toBe(false);
+    expect(store.writes).toBe(1);
+  });
+  test("parallel reads respect the limit and complete preflight before any writes", async () => {
+    const store = new TestStore();
+    let active = 0;
+    let peak = 0;
+    const read = store.getWithMetadata.bind(store);
+    vi.spyOn(store, "getWithMetadata").mockImplementation(async (key) => {
+      active++;
+      peak = Math.max(peak, active);
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 2));
+        return await read(key);
+      } finally {
+        active--;
+      }
+    });
+    await migrateFederation(baseline, store, { ...options, concurrency: 2 });
+    expect(peak).toBe(2);
+    expect(active).toBe(0);
+    expect([...store.entries.keys()].at(-1)).toBe(
+      encodeMigrationKey(storageReadyKey),
+    );
+    for (const concurrency of [0, 17, 1.5, NaN]) {
+      await expect(
+        migrateFederation(baseline, new TestStore(), {
+          ...options,
+          concurrency,
+        }),
+      ).rejects.toThrow("Concurrency");
+    }
+  });
   test("CLI rejects ambient Blobs context before reading or writing either backend", () => {
     const result = spawnSync(
       process.execPath,

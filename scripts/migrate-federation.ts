@@ -1,5 +1,7 @@
 import { getStore } from "@netlify/blobs";
 import postgres from "postgres";
+import { parseArgs } from "node:util";
+import { createMigrationFetch } from "./migration-fetch.ts";
 import { blobsStoreName } from "../src/lib/federation/storage.ts";
 import {
   migrateFederation,
@@ -18,9 +20,19 @@ async function main(): Promise<void> {
       "Run migration outside Netlify Dev and without NETLIFY_BLOBS_CONTEXT.",
     );
   }
-  const args = process.argv.slice(2);
-  if (args.some((arg) => arg !== "--apply" && arg !== "--quiesced"))
-    throw new Error("Use --apply --quiesced, or no arguments for a dry run.");
+  const { values } = parseArgs({
+    options: {
+      apply: { type: "boolean", default: false },
+      quiesced: { type: "boolean", default: false },
+      concurrency: { type: "string", default: "4" },
+    },
+  });
+  const concurrency = Number(values.concurrency);
+  if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 16) {
+    throw new MigrationError("Concurrency must be an integer from 1 to 16.");
+  }
+  if (values.apply && !values.quiesced)
+    throw new MigrationError("Apply requires --quiesced.");
   const connection = process.env.MIGRATION_DATABASE_URL;
   const siteID = process.env.NETLIFY_SITE_ID;
   const token = process.env.NETLIFY_AUTH_TOKEN;
@@ -52,15 +64,17 @@ async function main(): Promise<void> {
       siteID,
       token,
       consistency: "strong",
+      fetch: createMigrationFetch(),
     });
     const result = await migrateFederation(source, store, {
       origin: "https://writings.hongminhee.org",
-      apply: args.includes("--apply"),
-      quiesced: args.includes("--quiesced"),
+      apply: values.apply,
+      quiesced: values.quiesced,
+      concurrency,
     });
     console.log(
       JSON.stringify({
-        mode: args.includes("--apply") ? "apply" : "dry-run",
+        mode: values.apply ? "apply" : "dry-run",
         ...result,
       }),
     );

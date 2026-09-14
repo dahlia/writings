@@ -11,6 +11,44 @@ export interface SourceEntry {
   readonly expiresAt: number | null;
 }
 
+// Default prefixes in Fedify 2.4.0-dev.1936.  Keep unknown layouts and all
+// replay/task/nonce/circuit state; only these caches can be refetched safely.
+export function isRebuildableCache(key: readonly string[]): boolean {
+  return (
+    key[0] === "_fedify" &&
+    ((key.length === 3 &&
+      ["publicKey", "remoteDocument", "httpMessageSignaturesSpec"].includes(
+        key[1]!,
+      )) ||
+      (key.length === 4 && key[1] === "publicKey" && key[2] === "__fetchError"))
+  );
+}
+
+async function forEachConcurrent<T>(
+  items: readonly T[],
+  concurrency: number,
+  action: (item: T) => Promise<void>,
+): Promise<void> {
+  let index = 0;
+  let failed = false;
+  let failure: unknown;
+  await Promise.all(
+    Array.from({ length: Math.min(items.length, concurrency) }, async () => {
+      while (!failed && index < items.length) {
+        const item = items[index++]!;
+        try {
+          await action(item);
+        } catch (error) {
+          if (!failed) failure = error;
+          failed = true;
+        }
+      }
+    }),
+  );
+  // Settle every in-flight operation before returning an error to the operator.
+  if (failed) throw failure;
+}
+
 // Pinned to @fedify/netlify 2.4.0-dev.1936.  Migration needs absolute TTLs;
 // KvStore.list() does not expose them and set() would restart their lifetime.
 export function encodeMigrationKey(key: readonly string[]): string {
@@ -133,21 +171,37 @@ export async function migrateFederation(
     readonly apply?: boolean;
     readonly quiesced?: boolean;
     readonly now?: () => number;
+    readonly concurrency?: number;
   },
 ): Promise<{
   copied: number;
   unchanged: number;
   expired: number;
   ready: boolean;
+  skippedCache: number;
+  selected: number;
 }> {
   if (options.apply && !options.quiesced)
     throw new MigrationError("Apply requires --quiesced.");
   const now = options.now ?? Date.now;
+  const concurrency = options.concurrency ?? 4;
+  if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 16) {
+    throw new MigrationError("Concurrency must be an integer from 1 to 16.");
+  }
+  let expiredCount = 0;
+  let skippedCache = 0;
   const entries = new Map<string, SourceEntry>();
   for (const entry of source) {
     if (entry.expiresAt != null && !Number.isFinite(entry.expiresAt))
       throw new MigrationError("Invalid source expiration.");
-    if (expired(entry.expiresAt, now())) continue;
+    if (expired(entry.expiresAt, now())) {
+      expiredCount++;
+      continue;
+    }
+    if (isRebuildableCache(entry.key)) {
+      skippedCache++;
+      continue;
+    }
     const key = encodeMigrationKey(entry.key);
     if (key === readyBlobKey || entries.has(key))
       throw new MigrationError("Unexpected or duplicate source key.");
@@ -163,19 +217,21 @@ export async function migrateFederation(
 
   // Complete preflight before any mutation. Ignore expired partial-copy blobs.
   for await (const page of store.list({ paginate: true })) {
-    for (const { key } of page.blobs) {
-      if (key === readyBlobKey) continue;
+    await forEachConcurrent(page.blobs, concurrency, async ({ key }) => {
+      if (key === readyBlobKey) return;
       const target = await store.getWithMetadata(key, readOptions);
-      if (target == null || blobAbsent(target, now())) continue;
+      if (target == null || blobAbsent(target, now())) return;
       const entry = entries.get(key);
       if (entry == null || !matches(entry, target))
         throw new MigrationError(
           "Destination contains conflicting live data; no writes performed.",
         );
-    }
+    });
   }
   // Also read each source key directly: do not rely only on listing consistency.
-  for (const [key, entry] of entries) {
+  const selected = [...entries];
+  let unchanged = 0;
+  await forEachConcurrent(selected, concurrency, async ([key, entry]) => {
     const target = await store.getWithMetadata(key, readOptions);
     if (
       target != null &&
@@ -186,27 +242,31 @@ export async function migrateFederation(
         "Destination conflicts with source; no writes performed.",
       );
     }
-  }
+    if (target != null && matches(entry, target)) unchanged++;
+  });
 
   const result = {
     copied: 0,
-    unchanged: 0,
-    expired: source.length - entries.size,
+    unchanged: options.apply ? 0 : unchanged,
+    expired: expiredCount,
     ready: ready != null,
+    skippedCache,
+    selected: entries.size,
   };
-  for (const [key, entry] of entries) {
+  // The preflight already inspected every selected key; dry runs stop here.
+  if (!options.apply) return result;
+  await forEachConcurrent(selected, concurrency, async ([key, entry]) => {
     if (expired(entry.expiresAt, now())) {
       result.expired++;
-      continue;
+      return;
     }
     const target = await store.getWithMetadata(key, readOptions);
     if (target != null && matches(entry, target)) {
       result.unchanged++;
-      continue;
+      return;
     }
     if (target != null && !blobAbsent(target, now()))
       throw new MigrationError("Destination changed during migration.");
-    if (!options.apply) continue;
     if (target != null && !target.etag)
       throw new MigrationError("Destination did not return an ETag.");
     const written = await store.setJSON(key, entry.value, {
@@ -218,16 +278,15 @@ export async function migrateFederation(
         "Conditional migration write failed; keep maintenance active and retry.",
       );
     result.copied++;
-  }
-  if (!options.apply) return result;
-  for (const [key, entry] of entries) {
-    if (expired(entry.expiresAt, now())) continue;
+  });
+  await forEachConcurrent(selected, concurrency, async ([key, entry]) => {
+    if (expired(entry.expiresAt, now())) return;
     const target = await store.getWithMetadata(key, readOptions);
     if (target == null || !matches(entry, target))
       throw new MigrationError(
         "Migration verification failed; readiness marker not written.",
       );
-  }
+  });
   const marked = await store.setJSON(
     readyBlobKey,
     { version: 1, origin: options.origin },
